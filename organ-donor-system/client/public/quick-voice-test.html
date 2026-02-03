@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Voice Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+        button:hover { background: #5568d3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #result {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 50px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .log {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .log-entry { padding: 3px; border-bottom: 1px solid #dee2e6; }
+        .log-entry.error { color: #dc3545; }
+        .log-entry.success { color: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Quick Voice Recognition Test</h1>
+        
+        <div id="checks"></div>
+        
+        <button id="testBtn" onclick="quickTest()">🎤 Start Quick Test</button>
+        
+        <div id="result">Click the button and speak...</div>
+        
+        <div class="log" id="log"></div>
+    </div>
+
+    <script>
+        function log(msg, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logDiv.insertBefore(entry, logDiv.firstChild);
+            console.log(msg);
+        }
+
+        // Initial checks
+        window.onload = function() {
+            const checksDiv = document.getElementById('checks');
+            let html = '';
+
+            // Check 1: Browser support
+            const hasSupport = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+            html += `<div class="status ${hasSupport ? 'success' : 'error'}">
+                <strong>Browser Support:</strong> ${hasSupport ? '✅ Supported' : '❌ Not Supported'}
+            </div>`;
+            log(`Browser support: ${hasSupport}`, hasSupport ? 'success' : 'error');
+
+            // Check 2: Online status
+            const online = navigator.onLine;
+            html += `<div class="status ${online ? 'success' : 'error'}">
+                <strong>Internet:</strong> ${online ? '✅ Online' : '❌ Offline'}
+            </div>`;
+            log(`Online status: ${online}`, online ? 'success' : 'error');
+
+            // Check 3: Secure context
+            const secure = window.isSecureContext;
+            html += `<div class="status ${secure ? 'success' : 'info'}">
+                <strong>Secure Context:</strong> ${secure ? '✅ Yes' : '⚠️ No (but localhost is OK)'}
+            </div>`;
+            log(`Secure context: ${secure}`);
+
+            // Check 4: Protocol
+            html += `<div class="status info">
+                <strong>Protocol:</strong> ${window.location.protocol} on ${window.location.hostname}
+            </div>`;
+            log(`Protocol: ${window.location.protocol}, Host: ${window.location.hostname}`);
+
+            checksDiv.innerHTML = html;
+
+            if (!hasSupport) {
+                document.getElementById('testBtn').disabled = true;
+                document.getElementById('result').textContent = '❌ Your browser does not support Web Speech API';
+            }
+        };
+
+        function quickTest() {
+            const resultDiv = document.getElementById('result');
+            const btn = document.getElementById('testBtn');
+
+            log('=== Starting voice recognition test ===');
+
+            if (!navigator.onLine) {
+                resultDiv.className = 'status error';
+                resultDiv.textContent = '❌ No internet connection detected!';
+                log('ERROR: No internet connection', 'error');
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                resultDiv.className = 'status error';
+                resultDiv.textContent = '❌ Speech recognition not supported';
+                log('ERROR: Speech recognition not supported', 'error');
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                log('✅ Recognition started successfully', 'success');
+                resultDiv.className = 'status info';
+                resultDiv.textContent = '🎤 Listening... Speak now!';
+                btn.textContent = '⏹️ Stop';
+                btn.onclick = () => recognition.stop();
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                const confidence = event.results[0][0].confidence;
+                
+                log(`✅ SUCCESS! Heard: "${transcript}" (${(confidence * 100).toFixed(1)}% confidence)`, 'success');
+                
+                resultDiv.className = 'status success';
+                resultDiv.innerHTML = `
+                    <strong>✅ SUCCESS!</strong><br>
+                    You said: "${transcript}"<br>
+                    <small>Confidence: ${(confidence * 100).toFixed(1)}%</small>
+                `;
+            };
+
+            recognition.onerror = (event) => {
+                log(`❌ ERROR: ${event.error}`, 'error');
+                
+                let errorMsg = '';
+                let solution = '';
+                
+                switch(event.error) {
+                    case 'network':
+                        errorMsg = '🌐 Network Error';
+                        solution = `
+                            <strong>Possible causes:</strong><br>
+                            1. Firewall blocking Google speech services<br>
+                            2. Antivirus blocking WebRTC<br>
+                            3. Corporate/School network restrictions<br>
+                            4. VPN/Proxy interference<br><br>
+                            <strong>Try:</strong><br>
+                            • Disable firewall temporarily<br>
+                            • Try mobile hotspot<br>
+                            • Use different browser<br>
+                            • Check antivirus settings
+                        `;
+                        break;
+                    case 'not-allowed':
+                        errorMsg = '🎤 Microphone Access Denied';
+                        solution = 'Click the 🔒 lock icon in the address bar and allow microphone access.';
+                        break;
+                    case 'no-speech':
+                        errorMsg = '🔇 No Speech Detected';
+                        solution = 'Speak louder or closer to the microphone.';
+                        break;
+                    case 'audio-capture':
+                        errorMsg = '🎙️ No Microphone Found';
+                        solution = 'Connect a microphone and try again.';
+                        break;
+                    default:
+                        errorMsg = `❌ Error: ${event.error}`;
+                        solution = 'Check browser console (F12) for more details.';
+                }
+                
+                resultDiv.className = 'status error';
+                resultDiv.innerHTML = `<strong>${errorMsg}</strong><br><br>${solution}`;
+            };
+
+            recognition.onend = () => {
+                log('Recognition ended');
+                btn.textContent = '🎤 Start Quick Test';
+                btn.onclick = quickTest;
+            };
+
+            try {
+                log('Attempting to start recognition...');
+                recognition.start();
+            } catch (err) {
+                log(`❌ Failed to start: ${err.message}`, 'error');
+                resultDiv.className = 'status error';
+                resultDiv.textContent = `❌ Failed to start: ${err.message}`;
+            }
+        }
+
+        // Monitor connection changes
+        window.addEventListener('online', () => {
+            log('✅ Connection restored', 'success');
+            location.reload();
+        });
+
+        window.addEventListener('offline', () => {
+            log('❌ Connection lost', 'error');
+            location.reload();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "organ-donor-system",
+  "version": "1.0.0",
+  "description": "Production-grade organ donor registration and management system",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
+  "keywords": [
+    "organ-donor",
+    "mern",
+    "healthcare",
+    "donor-management"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
