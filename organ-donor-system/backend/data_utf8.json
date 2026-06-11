@@ -1,0 +1,244 @@
+﻿ReceiverRequests: [
+  {
+    "_id": "69aaad1b5ff75bd37ded0ace",
+    "receiver": "69aaa2056b879b04cf5248dc",
+    "organType": "Kidneys",
+    "bloodGroup": "O+",
+    "urgency": "critical",
+    "notes": "",
+    "status": "completed",
+    "createdAt": "2026-03-06T10:31:55.360Z",
+    "updatedAt": "2026-03-09T06:42:45.831Z",
+    "__v": 0,
+    "approvedAt": "2026-03-06T10:35:24.173Z",
+    "completedAt": "2026-03-09T05:10:55.125Z",
+    "matchedDonor": "69a9158adcdd4d0f80c67ab1"
+  }
+]
+OrganRequests: []
+Donors: [
+  {
+    "_id": "69a9158adcdd4d0f80c67ab1",
+    "user": "69a90edddc6cc67e9c62e2a4",
+    "dateOfBirth": "1976-04-27T00:00:00.000Z",
+    "gender": "male",
+    "bloodGroup": "O+",
+    "address": {
+      "street": "palani",
+      "city": "dindigul",
+      "state": "TamilNadu",
+      "pincode": "625517",
+      "country": "India"
+    },
+    "organsForDonation": [
+      "Kidneys"
+    ],
+    "medicalHistory": {
+      "chronicDiseases": [],
+      "currentMedications": [],
+      "allergies": [],
+      "surgeries": [],
+      "smokingStatus": "never",
+      "alcoholConsumption": "occasional"
+    },
+    "hlaMarkers": {
+      "hlaA": "",
+      "hlaB": "",
+      "hlaDR": ""
+    },
+    "biometrics": {
+      "height": 152,
+      "weight": 69
+    },
+    "idProof": {
+      "type": "aadhaar",
+      "number": "336835482297",
+      "documentUrl": "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg",
+      "cloudinaryId": "placeholder_id_1772688778864"
+    },
+    "consentGiven": true,
+    "consentDate": "2026-03-05T05:32:58.864Z",
+    "emergencyContact": {
+      "name": "suresh",
+      "relationship": "son",
+      "phone": "7418529630"
+    },
+    "donationStatus": "active",
+    "lastUpdated": "2026-03-05T05:32:58.890Z",
+    "createdAt": "2026-03-05T05:32:58.889Z",
+    "updatedAt": "2026-03-05T05:32:58.889Z",
+    "__v": 0
+  },
+  {
+    "_id": "69aa721bbd58ec8933647c10",
+    "user": "69aa69a4aac15ca7654f924b",
+    "dateOfBirth": "2006-04-27T00:00:00.000Z",
+    "gender": "male",
+    "bloodGroup": "O+",
+    "address": {
+      "street": "south street ,porulur",
+      "city": "porulur",
+      "state": "TamilNadu",
+      "pincode": "624616",
+      "country": "India"
+    },
+    "organsForDonation": [
+      "Liver"
+    ],
+    "medicalHistory": {
+      "chronicDiseases": [],
+      "currentMedications": [],
+      "allergies": [],
+      "surgeries": [],
+      "smokingStatus": "former",
+      "alcoholConsumption": "never"
+    },
+    "hlaMarkers": {
+      "hlaA": "",
+      "hlaB": "",
+      "hlaDR": ""
+    },
+    "biometrics": {
+      "height": 175,
+      "weight": 64
+    },
+    "idProof": {
+      "type": "aadhaar",
+      "number": "769906204440",
+      "documentUrl": "https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg",
+      "cloudinaryId": "placeholder_id_1772778011566"
+    },
+    "consentGiven": true,
+    "consentDate": "2026-03-06T06:20:11.566Z",
+    "emergencyContact": {
+      "name": "vasuraj",
+      "relationship": "father",
+      "phone": "7418529630"
+    },
+    "donationStatus": "active",
+    "lastUpdated": "2026-03-06T06:20:11.590Z",
+    "createdAt": "2026-03-06T06:20:11.590Z",
+    "updatedAt": "2026-03-06T06:20:11.590Z",
+    "__v": 0
+  }
+]
+Users: [
+  {
+    "_id": "697b945c95feb49be56e41eb",
+    "email": "kit2824bad037@gmail.com",
+    "password": "$2a$12$/64.Pui1qiiPhaObgNg85O74PwFfOuUNmLua.1T6RGfecIln5.rOC",
+    "role": "donor",
+    "firstName": "kiddo",
+    "lastName": "e",
+    "phone": "7550317811",
+    "isVerified": false,
+    "isActive": true,
+    "createdAt": "2026-01-29T17:09:48.975Z",
+    "updatedAt": "2026-01-29T17:09:48.975Z",
+    "__v": 0
+  },
+  {
+    "_id": "697b95aa058eaf283ffd0451",
+    "email": "kit2824bad132@gmail.com",
+    "password": "$2a$12$VvcSkca0OzskpH3Dqjnzl.02lTYGCwH7IV.Tcbnnqia9vj9sewI0a",
+    "role": "donor",
+    "firstName": "kiddo",
+    "lastName": "e",
+    "phone": "7550317811",
+    "isVerified": false,
+    "isActive": true,
+    "createdAt": "2026-01-29T17:15:22.409Z",
+    "updatedAt": "2026-01-29T17:15:50.932Z",
+    "__v": 0,
+    "refreshToken": null
+  },
+  {
+    "_id": "697b9d69d741bcdde3b60853",
+    "email": "dhyaneshr7@gmail.com",
+    "password": "$2a$12$kGcWbyX5qhusrdzUj9YgPeFpxRuvlll0Qo9VFCpTfjiEkKZM9yzj2",
+    "role": "donor",
+    "firstName": "kiddod",
+    "lastName": "se",
+    "phone": "7550317810",
+    "isVerified": false,
+    "isActive": true,
+    "createdAt": "2026-01-29T17:48:25.623Z",
+    "updatedAt": "2026-01-29T18:07:02.113Z",
+    "__v": 0,
+    "refreshToken": null
+  },
+  {
+    "_id": "699efcefc68188e2ea0404b7",
+    "email": "kiddo23@gmail.com",
+    "password": "$2a$12$L8yY.4G7P8cHNmadJuCZAetRkENDFjJYtXBdy4RsBE3wyAqfU8Xla",
+    "role": "donor",
+    "firstName": "DHYANESH",
+    "lastName": "S E",
+    "phone": "1234567890",
+    "isVerified": false,
+    "isActive": true,
+    "createdAt": "2026-02-25T13:45:19.020Z",
+    "updatedAt": "2026-02-25T13:49:11.817Z",
+    "__v": 0,
+    "refreshToken": null
+  },
+  {
+    "_id": "699efdedc68188e2ea0404f1",
+    "email": "kit2824bad016@gmail.com",
+    "password": "$2a$12$G0l5NRcAv/UA3iQk5.E8/u4rKt/AnruRjCvK1KF7cfgnBwu7niMD2",
+    "role": "donor",
+    "firstName": "sukran",
+    "lastName": "krishna",
+    "phone": "8610350236",
+    "isVerified": false,
+    "isActive": true,
+    "createdAt": "2026-02-25T13:49:33.456Z",
+    "updatedAt": "2026-02-25T14:00:58.361Z",
+    "__v": 0,
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTllZmRlZGM2ODE4OGUyZWEwNDA0ZjEiLCJpYXQiOjE3NzIwMjgwNTgsImV4cCI6MTc3MjYzMjg1OH0.uvect_0FfGmbG8QfejK5PS_LRjy_nFxSoodgUlM2cJo"
+  },
+  {
+    "_id": "69a90edddc6cc67e9c62e2a4",
+    "email": "vasuraj23@gmail.com",
+    "password": "$2a$12$zakrpcq1gJmatACuwzXkH.gZ2RFYrskZslInGaUPYf/Kb7wkJmYei",
+    "role": "donor",
+    "firstName": "vasuraj",
+    "lastName": "suresh",
+    "phone": "7695987552",
+    "isVerified": true,
+    "isActive": true,
+    "createdAt": "2026-03-05T05:04:29.578Z",
+    "updatedAt": "2026-03-09T07:57:55.335Z",
+    "__v": 0,
+    "refreshToken": null
+  },
+  {
+    "_id": "69aa69a4aac15ca7654f924b",
+    "email": "sureshrasu2006@gmail.com",
+    "password": "$2a$12$GP.2Ftm3xpVcWqWsCy42weuhxkuSJGP/318xMKHNlerbbymPsjeVK",
+    "role": "donor",
+    "firstName": "suresh",
+    "lastName": "v",
+    "phone": "7695987552",
+    "isVerified": true,
+    "isActive": true,
+    "createdAt": "2026-03-06T05:44:04.113Z",
+    "updatedAt": "2026-03-11T10:03:30.576Z",
+    "__v": 0,
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWFhNjlhNGFhYzE1Y2E3NjU0ZjkyNGIiLCJpYXQiOjE3NzMyMjM0MTAsImV4cCI6MTc3MzgyODIxMH0.9AFPBKkqv6qlEvJWp6aS0xy8qospA_tTDakPCYRb8mw"
+  },
+  {
+    "_id": "69afdbe9e8baaf848100dc54",
+    "email": "aids97122@gmail.com",
+    "role": "donor",
+    "firstName": "Aids",
+    "lastName": "042",
+    "googleId": "109981790915033542782",
+    "isVerified": true,
+    "isActive": true,
+    "createdAt": "2026-03-10T08:52:57.629Z",
+    "updatedAt": "2026-03-10T08:53:05.995Z",
+    "__v": 0,
+    "refreshToken": null
+  }
+]

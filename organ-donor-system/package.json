@@ -4,10 +4,10 @@
   "description": "Production-grade organ donor registration and management system",
   "main": "index.js",
   "scripts": {
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
   },
   "keywords": [
     "organ-donor",

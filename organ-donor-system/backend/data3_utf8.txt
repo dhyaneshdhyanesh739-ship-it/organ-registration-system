@@ -1,0 +1,5 @@
+﻿All donors:
+Donor: new ObjectId('69a9158adcdd4d0f80c67ab1') User: vasuraj23@gmail.com vasuraj suresh
+  RR: 1 OR: 0
+Donor: new ObjectId('69aa721bbd58ec8933647c10') User: sureshrasu2006@gmail.com suresh v
+  RR: 0 OR: 0
