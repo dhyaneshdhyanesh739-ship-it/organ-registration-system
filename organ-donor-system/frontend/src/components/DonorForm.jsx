@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { donorService } from '../services';
+import { donorService, publicService } from '../services';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Input from '../components/ui/Input';
 import Select from '../components/ui/Select';
@@ -137,6 +137,7 @@ const DonorProfileForm = ({ isEdit = false }) => {
     dateOfBirth: '',
     gender: 'male',
     bloodGroup: '',
+    hospital: '',
     address: {
       street: '',
       city: '',
@@ -173,8 +174,19 @@ const DonorProfileForm = ({ isEdit = false }) => {
     },
   });
   const [idDocument, setIdDocument] = useState(null);
+  const [hospitals, setHospitals] = useState([]);
 
   useEffect(() => {
+    const fetchHospitals = async () => {
+      try {
+        const data = await publicService.getVerifiedHospitals();
+        setHospitals(data.hospitals || []);
+      } catch (err) {
+        console.error('Failed to load hospitals:', err);
+      }
+    };
+    fetchHospitals();
+
     if (isEdit) {
       fetchProfile();
     }
@@ -186,9 +198,11 @@ const DonorProfileForm = ({ isEdit = false }) => {
       if (donor) {
         // Format date string for input type="date"
         const formattedDate = donor.dateOfBirth ? new Date(donor.dateOfBirth).toISOString().split('T')[0] : '';
+        const hospitalVal = donor.hospital?._id || donor.hospital || '';
         setFormData({
           ...donor,
           dateOfBirth: formattedDate,
+          hospital: hospitalVal,
           // Ensure nested objects exist
           address: donor.address || formData.address,
           medicalHistory: donor.medicalHistory || formData.medicalHistory,
@@ -272,6 +286,10 @@ const DonorProfileForm = ({ isEdit = false }) => {
       
       if (formData.location && formData.location.coordinates) {
         data.append('location', JSON.stringify(formData.location));
+      }
+      
+      if (formData.hospital) {
+        data.append('hospital', formData.hospital);
       }
       
       if (idDocument) {
@@ -410,6 +428,18 @@ const DonorProfileForm = ({ isEdit = false }) => {
                         options={[
                           { value: '', label: 'Select Blood Group' },
                           ...BLOOD_GROUPS.map((bg) => ({ value: bg, label: bg })),
+                        ]}
+                      />
+
+                      <Select
+                        label="Preferred Hospital"
+                        name="hospital"
+                        value={formData.hospital || ''}
+                        onChange={handleChange}
+                        required
+                        options={[
+                          { value: '', label: 'Select Preferred Hospital' },
+                          ...hospitals.map((h) => ({ value: h._id, label: h.hospitalName })),
                         ]}
                       />
                     </div>

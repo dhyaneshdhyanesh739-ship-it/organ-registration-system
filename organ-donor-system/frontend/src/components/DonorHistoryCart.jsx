@@ -97,9 +97,16 @@ const DonorHistoryCart = () => {
                             <CheckCircle2 className="w-4 h-4 text-primary-600" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
-                              {item.organType} Donated
-                            </p>
+                            <div className="flex items-center gap-1.5">
+                              <p className="text-sm font-bold text-gray-900 dark:text-white truncate">
+                                {item.organType} {item.organType.toLowerCase().includes('donation') ? '' : 'Donated'}
+                              </p>
+                              {item.isScanned && (
+                                <span className="px-1.5 py-0.5 text-[9px] font-black uppercase bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 rounded">
+                                  AI OCR
+                                </span>
+                              )}
+                            </div>
                             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-1">
                               <User className="w-3 h-3" />
                               To: {item.recipientName} ({item.recipientType})

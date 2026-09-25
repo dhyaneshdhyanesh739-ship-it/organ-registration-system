@@ -109,6 +109,11 @@ export const donorService = {
         const response = await api.get('/donor/history');
         return response.data;
     },
+
+    saveScannedHistory: async (historyItems) => {
+        const response = await api.post('/donor/history/scanned', { historyItems });
+        return response.data;
+    },
 };
 
 export const hospitalService = {
@@ -212,6 +217,18 @@ export const aiService = {
 
     chat: async (message, role) => {
         const response = await api.post('/ai/chat', { message, role });
+        return response.data;
+    },
+
+    scanDonorDocument: async (formData) => {
+        const response = await api.post('/ai/scan-document', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return response.data;
+    },
+
+    calculateDonorHistoryText: async (text) => {
+        const response = await api.post('/ai/calculate-history-text', { text });
         return response.data;
     },
 };
@@ -340,6 +357,13 @@ export const locationService = {
         const response = await axios.get(`${LOCATION_API_BASE}/locations/villages`, {
             params: { search: query }
         });
+        return response.data;
+    }
+};
+
+export const publicService = {
+    getVerifiedHospitals: async () => {
+        const response = await api.get('/public/hospitals');
         return response.data;
     }
 };

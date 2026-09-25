@@ -93,10 +93,9 @@ const createDonorProfile = async (req, res, next) => {
  */
 const getDonorProfile = async (req, res, next) => {
     try {
-        const donor = await Donor.findOne({ user: req.user._id }).populate(
-            'user',
-            'firstName lastName email phone isVerified'
-        );
+        const donor = await Donor.findOne({ user: req.user._id })
+            .populate('user', 'firstName lastName email phone isVerified')
+            .populate('hospital');
 
         if (!donor) {
             return res.status(404).json({
@@ -328,6 +327,19 @@ const getDonationHistory = async (req, res, next) => {
             })
             .lean();
 
+        // Fetch scanned history items
+        const scannedItems = (donor.scannedHistory || []).map(item => ({
+            id: item._id,
+            organType: item.organType,
+            recipientName: item.recipientName,
+            recipientType: item.recipientType,
+            status: item.status,
+            date: item.date || item.scannedAt,
+            notes: item.notes,
+            isScanned: true,
+            aiEngineUsed: item.aiEngineUsed
+        }));
+
         // Unify the data
         const unifiedHistory = [
             ...receiverRequests.map(req => ({
@@ -345,12 +357,55 @@ const getDonationHistory = async (req, res, next) => {
                 recipientType: 'Hospital',
                 status: req.status,
                 date: req.updatedAt,
-            }))
+            })),
+            ...scannedItems
         ].sort((a, b) => new Date(b.date) - new Date(a.date));
 
         res.json({
             success: true,
             history: unifiedHistory,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * @route   POST /api/donor/history/scanned
+ * @desc    Save AI OCR scanned history items to donor profile
+ * @access  Private (Donor only)
+ */
+const saveScannedHistory = async (req, res, next) => {
+    try {
+        const { historyItems } = req.body;
+        const donor = await Donor.findOne({ user: req.user._id });
+
+        if (!donor) {
+            return res.status(404).json({
+                success: false,
+                message: 'Donor profile not found',
+            });
+        }
+
+        if (Array.isArray(historyItems) && historyItems.length > 0) {
+            historyItems.forEach(item => {
+                donor.scannedHistory.push({
+                    date: item.date ? new Date(item.date) : new Date(),
+                    organType: item.organType || 'Organ/Tissue Donation',
+                    recipientName: item.recipientName || 'Medical Facility Record',
+                    recipientType: item.recipientType || 'OCR Scanned',
+                    status: item.status || 'completed',
+                    notes: item.notes || 'Extracted via AI OCR model',
+                    aiEngineUsed: item.aiEngineUsed || 'AI Multimodal Vision LLM'
+                });
+            });
+            await donor.save();
+        }
+
+        res.json({
+            success: true,
+            message: 'Scanned history saved to donor profile successfully!',
+            scannedHistory: donor.scannedHistory,
         });
     } catch (error) {
         next(error);
@@ -365,4 +420,5 @@ module.exports = {
     getDonorStats,
     getDonorActivity,
     getDonationHistory,
+    saveScannedHistory,
 };

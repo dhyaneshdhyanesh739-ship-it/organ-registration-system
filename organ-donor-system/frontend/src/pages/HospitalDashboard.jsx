@@ -10,9 +10,10 @@ import Card from '../components/ui/Card';
 import HospitalProfileForm from '../components/HospitalProfileForm';
 import HospitalRequestForm from '../components/HospitalRequestForm';
 import HospitalPatientDonorForm from '../components/HospitalPatientDonorForm';
-import { Activity, Search, Eye, Award, UserPlus } from 'lucide-react';
+import { Activity, Search, Eye, Award, UserPlus, Sparkles } from 'lucide-react';
 import HistoryItem from '../components/HistoryItem';
 import Certificate from '../components/Certificate';
+import AIDonorHistoryModal from '../components/AIDonorHistoryModal';
 import { matchingService } from '../services';
 import MatchList from '../components/MatchList';
 import { useSocket } from '../context/SocketContext';
@@ -34,6 +35,7 @@ const HospitalDashboard = () => {
   const [loadingMatches, setLoadingMatches] = useState(false);
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
+  const [showAIScannerModal, setShowAIScannerModal] = useState(false);
   const [filterBloodGroup, setFilterBloodGroup] = useState('');
   const [filterUrgency, setFilterUrgency] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
@@ -157,6 +159,14 @@ const HospitalDashboard = () => {
             </div>
             {profile && (
               <div className="flex items-center gap-3">
+                <Button
+                  variant="primary"
+                  leftIcon={<Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />}
+                  onClick={() => setShowAIScannerModal(true)}
+                  className="bg-gradient-to-r from-rose-600 to-pink-600 text-white shadow-md shadow-rose-200 dark:shadow-rose-900/20"
+                >
+                  AI OCR Scanner
+                </Button>
                 <Button
                   variant="primary"
                   leftIcon={<UserPlus className="w-4 h-4" />}
@@ -700,6 +710,13 @@ const HospitalDashboard = () => {
             }}
           />
         )}
+
+        {/* AI OCR Scanner Modal */}
+        <AIDonorHistoryModal
+          isOpen={showAIScannerModal}
+          onClose={() => setShowAIScannerModal(false)}
+          onHistoryUpdated={fetchData}
+        />
       </div>
     </div>
   );

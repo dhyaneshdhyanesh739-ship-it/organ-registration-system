@@ -391,7 +391,9 @@ const getPatientDonors = async (req, res, next) => {
             });
         }
 
-        const patientDonors = await PatientDonor.find({ hospital: hospital._id }).sort({ createdAt: -1 });
+        const patientDonors = await PatientDonor.find({ hospital: hospital._id })
+            .populate('hospital', 'hospitalName')
+            .sort({ createdAt: -1 });
 
         res.json({
             success: true,

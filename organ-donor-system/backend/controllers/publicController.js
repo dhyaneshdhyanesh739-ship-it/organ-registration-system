@@ -114,8 +114,28 @@ const getPublicOrders = async (req, res, next) => {
     }
 };
 
+/**
+ * @route   GET /api/public/hospitals
+ * @desc    Get verified hospitals
+ * @access  Public
+ */
+const getVerifiedHospitals = async (req, res, next) => {
+    try {
+        const hospitals = await Hospital.find({ verificationStatus: 'verified' })
+            .select('hospitalName address')
+            .sort({ hospitalName: 1 });
+        res.json({
+            success: true,
+            hospitals
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getPublicStats,
     getPublicActivity,
-    getPublicOrders
+    getPublicOrders,
+    getVerifiedHospitals
 };

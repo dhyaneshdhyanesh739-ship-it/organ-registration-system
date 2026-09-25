@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { receiverService } from '../services';
-import { Heart, Search, Activity, Loader, Send, Filter, ChevronDown, CheckCircle, AlertTriangle, Clock, MapPin, Award } from 'lucide-react';
+import { Heart, Search, Activity, Loader, Send, Filter, ChevronDown, CheckCircle, AlertTriangle, Clock, MapPin, Award, Sparkles } from 'lucide-react';
 import Certificate from '../components/Certificate';
+import AIDonorHistoryModal from '../components/AIDonorHistoryModal';
 
 const ORGANS = ['Heart', 'Liver', 'Kidneys', 'Lungs', 'Pancreas', 'Intestines', 'Corneas', 'Skin', 'Bone', 'Heart Valves', 'Blood Vessels'];
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -38,6 +39,7 @@ const ReceiverDashboard = () => {
   const [myRequests, setMyRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [showCertificate, setShowCertificate] = useState(false);
+  const [showAIScannerModal, setShowAIScannerModal] = useState(false);
 
   const [form, setForm] = useState({
     organType: '',
@@ -121,15 +123,26 @@ const ReceiverDashboard = () => {
                 Welcome, <span className="font-semibold">{user?.firstName}</span>! Find the organ you need.
               </p>
             </div>
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => setShowRequestForm(true)}
-              className="btn-primary flex items-center gap-2 self-start md:self-auto"
-            >
-              <Send className="w-4 h-4" />
-              Submit Organ Request
-            </motion.button>
+            <div className="flex items-center gap-3 self-start md:self-auto">
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setShowAIScannerModal(true)}
+                className="px-4 py-2.5 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-xl font-bold text-sm shadow-md flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+                AI OCR Scanner
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setShowRequestForm(true)}
+                className="btn-primary flex items-center gap-2"
+              >
+                <Send className="w-4 h-4" />
+                Submit Organ Request
+              </motion.button>
+            </div>
           </div>
         </motion.div>
 
@@ -380,9 +393,15 @@ const ReceiverDashboard = () => {
                       <div className="text-3xl">{ORGAN_ICONS[item.organType] || '🔬'}</div>
                       <div>
                         <p className="font-bold text-gray-900 dark:text-white">{item.organType}</p>
-                        <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                        <p className="text-xs text-gray-500 flex flex-wrap items-center gap-1 mt-0.5">
                           <MapPin className="w-3 h-3" />
-                          {item.city}, {item.state}
+                          <span>{item.city}, {item.state}</span>
+                          {item.hospitalName && (
+                            <>
+                              <span className="text-gray-300 dark:text-gray-600">•</span>
+                              <span className="font-semibold text-primary-600 dark:text-primary-400">{item.hospitalName}</span>
+                            </>
+                          )}
                         </p>
                       </div>
                     </div>
@@ -593,6 +612,11 @@ const ReceiverDashboard = () => {
                         <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2 mt-1">
                           <span className="font-medium text-gray-900 dark:text-gray-200">Phone:</span> {selectedRequest.matchedDonor.user.phone}
                         </p>
+                        {selectedRequest.matchedDonor.hospital && (
+                          <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2 mt-1">
+                            <span className="font-medium text-gray-900 dark:text-gray-200">Hospital:</span> {selectedRequest.matchedDonor.hospital.hospitalName}
+                          </p>
+                        )}
                       </div>
                       <div className="text-center bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">
                         <span className="block text-xs font-bold text-red-600 dark:text-red-400">BLOOD</span>
@@ -639,8 +663,14 @@ const ReceiverDashboard = () => {
         userData={user}
         details={{ 
           organNeeded: myRequests.length > 0 ? myRequests[0].organType : 'an organ',
-          date: myRequests.length > 0 ? myRequests[0].createdAt : user?.createdAt 
         }}
+      />
+
+      {/* AI OCR Scanner Modal */}
+      <AIDonorHistoryModal
+        isOpen={showAIScannerModal}
+        onClose={() => setShowAIScannerModal(false)}
+        onHistoryUpdated={fetchData}
       />
     </div>
   );

@@ -1,12 +1,18 @@
-const mongoose = require('mongoose');
-const ReceiverRequest = require('e:/kiddo/organ-donor-system/server/models/ReceiverRequest');
-const OrganRequest = require('e:/kiddo/organ-donor-system/server/models/OrganRequest');
-const Donor = require('e:/kiddo/organ-donor-system/server/models/Donor');
-const User = require('e:/kiddo/organ-donor-system/server/models/User');
+const mongoose = require('./backend/node_modules/mongoose');
+const path = require('path');
+
+// Load environment variables
+require('dotenv').config({ path: path.join(__dirname, 'backend', '.env') });
+
+const ReceiverRequest = require('./backend/models/ReceiverRequest');
+const OrganRequest = require('./backend/models/OrganRequest');
+const Donor = require('./backend/models/Donor');
+const User = require('./backend/models/User');
 
 async function debugHistory() {
     try {
-        await mongoose.connect('mongodb://localhost:27017/organ-donor-system');
+        const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/organ-donor-system';
+        await mongoose.connect(uri);
         
         console.log('--- Donor Documents ---');
         const donors = await Donor.find().populate('user', 'firstName lastName');

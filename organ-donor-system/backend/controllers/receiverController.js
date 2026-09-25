@@ -26,7 +26,8 @@ const getAvailableOrgans = async (req, res, next) => {
 
         const donors = await Donor.find(query)
             .populate('user', 'firstName lastName')
-            .select('bloodGroup organsForDonation address donationStatus createdAt');
+            .populate('hospital', 'hospitalName')
+            .select('bloodGroup organsForDonation address donationStatus createdAt hospital');
 
         // Build a flattened list of available organs per donor
         const availableOrgans = [];
@@ -40,6 +41,7 @@ const getAvailableOrgans = async (req, res, next) => {
                         city: donor.address?.city,
                         state: donor.address?.state,
                         registeredAt: donor.createdAt,
+                        hospitalName: donor.hospital?.hospitalName || '',
                     });
                 }
             });
@@ -105,10 +107,16 @@ const getMyRequests = async (req, res, next) => {
         const requests = await ReceiverRequest.find({ receiver: req.user._id })
             .populate({
                 path: 'matchedDonor',
-                populate: {
-                    path: 'user',
-                    select: 'firstName lastName email phone'
-                }
+                populate: [
+                    {
+                        path: 'user',
+                        select: 'firstName lastName email phone',
+                    },
+                    {
+                        path: 'hospital',
+                        select: 'hospitalName address contactPerson',
+                    }
+                ],
             })
             .sort({ createdAt: -1 });
 

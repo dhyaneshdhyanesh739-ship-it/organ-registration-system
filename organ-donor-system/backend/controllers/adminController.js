@@ -214,7 +214,8 @@ const getPendingVerifications = async (req, res, next) => {
             consentGiven: true,
         })
             .populate('user', 'firstName lastName email')
-            .select('bloodGroup organsForDonation user');
+            .populate('hospital', 'hospitalName')
+            .select('bloodGroup organsForDonation user hospital');
 
         res.json({
             success: true,
@@ -241,6 +242,7 @@ const getAllDonors = async (req, res, next) => {
     try {
         const donors = await Donor.find()
             .populate('user', 'firstName lastName email phone createdAt isVerified')
+            .populate('hospital', 'hospitalName')
             .sort({ createdAt: -1 });
 
         res.json({

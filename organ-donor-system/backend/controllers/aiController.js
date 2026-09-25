@@ -110,8 +110,63 @@ const chatWithAI = async (req, res, next) => {
     }
 };
 
+/**
+ * Scan medical document / donation record image with AI OCR LLM model
+ */
+const scanDonorDocument = async (req, res, next) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please upload a medical report or document image'
+            });
+        }
+
+        const { analyzeDonorDocument } = require('../services/aiOCRService');
+        const result = await analyzeDonorDocument(req.file.buffer, req.file.mimetype);
+
+        res.json({
+            success: true,
+            message: 'Document analyzed successfully with AI OCR LLM',
+            data: result
+        });
+    } catch (error) {
+        console.error('Scan donor document error:', error);
+        next(error);
+    }
+};
+
+/**
+ * Calculate donor history metrics from raw text input using AI
+ */
+const calculateDonorHistoryText = async (req, res, next) => {
+    try {
+        const { text } = req.body;
+        if (!text || text.trim().length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Please provide text content to calculate donor history'
+            });
+        }
+
+        const { analyzeDonorTextReport } = require('../services/aiOCRService');
+        const result = await analyzeDonorTextReport(text);
+
+        res.json({
+            success: true,
+            message: 'Donor history calculated successfully',
+            data: result
+        });
+    } catch (error) {
+        console.error('Calculate donor history text error:', error);
+        next(error);
+    }
+};
+
 module.exports = {
     getSmartHelp,
     explainMedicalTerms,
-    chatWithAI
+    chatWithAI,
+    scanDonorDocument,
+    calculateDonorHistoryText
 };

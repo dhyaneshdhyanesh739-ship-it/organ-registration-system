@@ -105,7 +105,12 @@ const AdminDataViewModal = ({ isOpen, onClose, title, data, type }) => {
                                 }
                               </h4>
                               <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {type === 'receiver' ? item.email : type === 'patient-donor' ? `Hospital: ${item.hospital?.hospitalName}` : item.user?.email}
+                                {type === 'receiver' 
+                                  ? item.email 
+                                  : type === 'patient-donor' 
+                                  ? `Hospital: ${item.hospital?.hospitalName}` 
+                                  : `${item.user?.email || ''}${item.hospital?.hospitalName ? ` | Hospital: ${item.hospital.hospitalName}` : ''}`
+                                }
                               </p>
                             </div>
                           </div>

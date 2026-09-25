@@ -186,6 +186,18 @@ const findMatchingDonors = async (Donor, request, hospitalLocation) => {
                 return null;
             }
 
+            // Calculate age manually because of .lean()
+            if (donor.dateOfBirth) {
+                const today = new Date();
+                const birthDate = new Date(donor.dateOfBirth);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                donor.age = age;
+            }
+
             const distance = calculateDistance(
                 donor.location.coordinates,
                 hospitalLocation.coordinates

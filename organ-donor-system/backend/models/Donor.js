@@ -8,6 +8,10 @@ const donorSchema = new mongoose.Schema(
             required: true,
             unique: true,
         },
+        hospital: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Hospital',
+        },
         dateOfBirth: {
             type: Date,
             required: [true, 'Date of birth is required'],
@@ -128,6 +132,19 @@ const donorSchema = new mongoose.Schema(
             enum: ['active', 'inactive', 'matched', 'completed'],
             default: 'inactive',
         },
+        scannedHistory: [
+            {
+                date: { type: Date, default: Date.now },
+                organType: { type: String, required: true },
+                recipientName: { type: String, default: 'External Hospital / Record' },
+                recipientType: { type: String, default: 'OCR Scanned' },
+                status: { type: String, default: 'completed' },
+                notes: String,
+                medicalMetrics: mongoose.Schema.Types.Mixed,
+                aiEngineUsed: String,
+                scannedAt: { type: Date, default: Date.now }
+            }
+        ],
         lastUpdated: {
             type: Date,
             default: Date.now,

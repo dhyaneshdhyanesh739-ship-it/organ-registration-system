@@ -12,6 +12,7 @@ import { LineChartComponent } from '../components/Charts';
 import { Link } from 'react-router-dom';
 import HistoryItem from '../components/HistoryItem';
 import Certificate from '../components/Certificate';
+import AIDonorHistoryScanner from '../components/AIDonorHistoryScanner';
 
 const DonorDashboard = () => {
   const { user } = useAuth();
@@ -379,6 +380,13 @@ const DonorDashboard = () => {
               </div>
             </Card>
           </motion.div>
+        )}
+
+        {/* AI Multimodal Donor History Scanner */}
+        {profile && (
+          <div className="mb-8">
+            <AIDonorHistoryScanner onHistoryUpdated={fetchData} />
+          </div>
         )}
 
         {/* Activity & History */}

@@ -107,7 +107,11 @@ const getMatches = async (req, res, next) => {
             hospital: hospital._id,
         }).populate({
             path: 'matchedDonors.donor',
-            select: 'bloodGroup organsForDonation age address.city address.state gender',
+            select: 'bloodGroup organsForDonation dateOfBirth address.city address.state gender hospital',
+            populate: {
+                path: 'hospital',
+                select: 'hospitalName',
+            }
         });
 
         if (!request) {

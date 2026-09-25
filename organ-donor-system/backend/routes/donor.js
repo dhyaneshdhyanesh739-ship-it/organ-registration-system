@@ -7,6 +7,7 @@ const {
     getDonorStats,
     getDonorActivity,
     getDonationHistory,
+    saveScannedHistory,
 } = require('../controllers/donorController');
 const authenticate = require('../middleware/auth');
 const roleCheck = require('../middleware/roleCheck');
@@ -25,5 +26,6 @@ router.put('/consent', updateConsent);
 router.get('/stats', getDonorStats);
 router.get('/activity', getDonorActivity);
 router.get('/history', getDonationHistory);
+router.post('/history/scanned', saveScannedHistory);
 
 module.exports = router;

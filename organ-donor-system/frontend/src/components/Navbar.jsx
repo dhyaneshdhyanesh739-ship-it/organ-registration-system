@@ -15,12 +15,14 @@ import {
   Sun, 
   Moon, 
   X, 
-  Menu 
+  Menu,
+  Sparkles
 } from 'lucide-react';
 import NotificationCenter from './NotificationCenter';
 import AdminDataViewModal from './AdminDataViewModal';
 import DonorHistoryCart from './DonorHistoryCart';
 import ReceiverHistoryCart from './ReceiverHistoryCart';
+import AIDonorHistoryModal from './AIDonorHistoryModal';
 import { adminService } from '../services';
 import { useToast } from '../context/ToastContext';
 import Modal from './ui/Modal';
@@ -30,6 +32,7 @@ const Navbar = () => {
   const { isDark, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
+  const [isAIScannerOpen, setIsAIScannerOpen] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -127,6 +130,15 @@ const Navbar = () => {
               </>
             ) : (
               <>
+                <button
+                  onClick={() => setIsAIScannerOpen(true)}
+                  className="px-3.5 py-1.5 rounded-full font-extrabold text-xs bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-1.5 border border-rose-300 dark:border-rose-700 cursor-pointer"
+                  title="AI Multimodal OCR & Donor History Calculator"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                  <span>AI OCR Model</span>
+                </button>
+
                 <Link to={getDashboardLink()} className="btn-ghost flex items-center gap-2">
                   <Layout className="w-4 h-4" />
                   Dashboard
@@ -343,6 +355,12 @@ const Navbar = () => {
           />
         </div>
       </Modal>
+
+      {/* AI Multimodal OCR & Donor History Modal */}
+      <AIDonorHistoryModal
+        isOpen={isAIScannerOpen}
+        onClose={() => setIsAIScannerOpen(false)}
+      />
     </nav>
   );
 };
