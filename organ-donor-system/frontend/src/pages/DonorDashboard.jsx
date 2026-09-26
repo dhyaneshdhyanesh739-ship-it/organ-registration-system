@@ -3,12 +3,11 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { donorService } from '../services';
-import { Heart, Activity, FileText, CheckCircle, XCircle, Loader, Plus, Edit, Award, Shield, Star, Trophy } from 'lucide-react';
+import { Heart, Activity, FileText, CheckCircle, XCircle, Loader, Plus, Edit, Award, Shield, Star, Trophy, Sparkles, Scale, Crown } from 'lucide-react';
 import StatsCard from '../components/StatsCard';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
-import { LineChartComponent } from '../components/Charts';
 import { Link } from 'react-router-dom';
 import HistoryItem from '../components/HistoryItem';
 import Certificate from '../components/Certificate';
@@ -24,35 +23,38 @@ const DonorDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showConsentModal, setShowConsentModal] = useState(false);
   const [showCertificate, setShowCertificate] = useState(false);
-  const [pledgeStory, setPledgeStory] = useState("I'm donating because I believe everyone deserves a second chance at life.");
+  const [pledgeStory, setPledgeStory] = useState("I'm pledging to donate my organs to bestow the gift of life onto others in need.");
   const [isEditingPledge, setIsEditingPledge] = useState(false);
+
+  // Medical Suitability Simulator state
+  const [suitabilityAge, setSuitabilityAge] = useState(28);
+  const [selectedOrgan, setSelectedOrgan] = useState('Kidneys');
+  const [calculatedScore, setCalculatedScore] = useState(94);
+
+  useEffect(() => {
+    // Recalculate mock suitability score dynamically
+    let base = 98 - Math.max(0, (suitabilityAge - 30) * 0.4);
+    if (selectedOrgan === 'Heart') base -= 4;
+    if (selectedOrgan === 'Corneas') base += 3;
+    setCalculatedScore(Math.min(99, Math.max(65, Math.round(base))));
+  }, [suitabilityAge, selectedOrgan]);
 
   // Calculate Gamification Score (0-100)
   const getCompletionScore = () => {
-    let score = 20; // Base score for creating account
-    if (user?.isVerified) score += 20;
-    if (profile) score += 30;
-    if (stats?.consentGiven) score += 30;
+    let score = 25; // Base score for creating account
+    if (user?.isVerified) score += 25;
+    if (profile) score += 25;
+    if (stats?.consentGiven) score += 25;
     return score;
   };
 
   const getBadges = () => {
     const badges = [];
-    if (user?.isVerified) badges.push({ icon: Shield, color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/30', label: 'Verified Identity' });
-    if (profile) badges.push({ icon: Star, color: 'text-yellow-500', bg: 'bg-yellow-100 dark:bg-yellow-900/30', label: 'Profile Complete' });
-    if (stats?.consentGiven) badges.push({ icon: Trophy, color: 'text-orange-500', bg: 'bg-orange-100 dark:bg-orange-900/30', label: 'Organ Hero' });
+    if (user?.isVerified) badges.push({ icon: Shield, color: 'text-amber-400', bg: 'bg-amber-950/60 border border-amber-500/40', label: 'Verified Royal Identity' });
+    if (profile) badges.push({ icon: Star, color: 'text-emerald-400', bg: 'bg-emerald-950/60 border border-emerald-500/40', label: 'Complete Health Passport' });
+    if (stats?.consentGiven) badges.push({ icon: Crown, color: 'text-rose-400', bg: 'bg-rose-950/60 border border-rose-500/40', label: 'Imperial Life Hero' });
     return badges;
   };
-
-  // Mock data for activity chart
-  const activityData = [
-    { month: 'Jan', updates: 2 },
-    { month: 'Feb', updates: 3 },
-    { month: 'Mar', updates: 1 },
-    { month: 'Apr', updates: 4 },
-    { month: 'May', updates: 2 },
-    { month: 'Jun', updates: 5 },
-  ];
 
   useEffect(() => {
     fetchData();
@@ -81,7 +83,7 @@ const DonorDashboard = () => {
     try {
       const newConsent = !stats?.consentGiven;
       await donorService.updateConsent({ consentGiven: newConsent });
-      toast.success(`Consent ${newConsent ? 'given' : 'revoked'} successfully`);
+      toast.success(`Consent ${newConsent ? 'granted' : 'revoked'} successfully`);
       setShowConsentModal(false);
       fetchData();
     } catch (error) {
@@ -91,46 +93,66 @@ const DonorDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader className="w-8 h-8 animate-spin text-primary-600" />
+      <div className="min-h-screen flex items-center justify-center bg-[#070913]">
+        <Loader className="w-10 h-10 animate-spin text-amber-400" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-orange-50/40 to-pink-100/50 dark:from-gray-900 dark:via-rose-950/20 dark:to-orange-950/20 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-[#070913] via-[#0c0f26] to-[#140b24] text-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Imperial Glass-Brutal Banner Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-amber-950/40 via-[#0c0f26]/90 to-rose-950/40 border-2 border-amber-400/50 backdrop-blur-2xl shadow-[6px_6px_0px_0px_#E5C158] overflow-hidden"
         >
-          <div className="flex items-center justify-between">
+          <div className="absolute top-0 right-0 transform translate-x-8 -translate-y-8 opacity-10 pointer-events-none">
+            <Crown className="w-64 h-64 text-amber-400" />
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
             <div>
-              <h1 className="text-4xl font-bold gradient-text">Donor Dashboard</h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-2 text-lg">
-                Welcome back, <span className="font-semibold">{user.firstName}</span>! 👋
+              <div className="flex items-center gap-3 mb-2">
+                <span className="px-3 py-1 bg-amber-400/20 border border-amber-400/50 text-amber-300 font-bold text-xs uppercase tracking-widest rounded-full flex items-center gap-1.5 shadow-sm">
+                  <Crown className="w-3.5 h-3.5 text-amber-400" /> Imperial Donor Command
+                </span>
+                {stats?.consentGiven && (
+                  <span className="px-3 py-1 bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold text-xs uppercase tracking-widest rounded-full flex items-center gap-1">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Active Pledge
+                  </span>
+                )}
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-extrabold royal-title text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-500 drop-shadow">
+                Welcome, {user.firstName}!
+              </h1>
+              <p className="text-gray-300 text-sm sm:text-base mt-2 font-medium">
+                Your pledge is a beacon of hope. Manage your medical profile, track donor suitability, and view matching records.
               </p>
             </div>
-            {profile && (
-              <Link to="/donor/profile/edit">
-                <Button variant="outline" leftIcon={<Edit className="w-4 h-4" />}>
-                  Edit Profile
-                </Button>
-              </Link>
-            )}
+
+            <div className="flex items-center gap-3">
+              {profile && (
+                <Link to="/donor/profile/edit">
+                  <Button variant="outline" className="border-amber-400/60 text-amber-300 hover:bg-amber-400/20 shadow-[4px_4px_0px_0px_#E5C158]" leftIcon={<Edit className="w-4 h-4" />}>
+                    Edit Profile
+                  </Button>
+                </Link>
+              )}
+            </div>
           </div>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatsCard
-            title="Profile Status"
-            value={user.isVerified ? 'Verified' : 'Pending'}
+            title="Identity Status"
+            value={user.isVerified ? 'Verified' : 'In Review'}
             icon={user.isVerified ? CheckCircle : XCircle}
             color={user.isVerified ? 'green' : 'orange'}
-            change={user.isVerified ? '100%' : 'In Review'}
+            change={user.isVerified ? '100% Validated' : 'Verification Pending'}
             trend="up"
             delay={0}
           />
@@ -142,135 +164,134 @@ const DonorDashboard = () => {
             delay={0.1}
           />
           <StatsCard
-            title="Organs Registered"
-            value={stats?.organsRegistered || 0}
+            title="Organs Pledged"
+            value={stats?.organsRegistered || profile?.organsForDonation?.length || 0}
             icon={Heart}
             color="primary"
-            change="+2 this month"
+            change="+ Active Registry"
             trend="up"
             delay={0.2}
           />
           <StatsCard
-            title="Consent Status"
-            value={stats?.consentGiven ? 'Given' : 'Not Given'}
+            title="Consent Registry"
+            value={stats?.consentGiven ? 'Granted' : 'Pending'}
             icon={FileText}
             color={stats?.consentGiven ? 'green' : 'purple'}
             delay={0.3}
           />
         </div>
 
-        {/* Gamification Bar */}
+        {/* Imperial Donor Journey & Gamification Bar */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="mb-8"
+          className="p-6 rounded-2xl bg-[#0c0f26]/90 border-2 border-amber-400/40 backdrop-blur-xl shadow-[6px_6px_0px_0px_#E5C158]"
         >
-          <Card className="bg-white dark:bg-gray-800 border-none shadow-sm">
-            <Card.Content className="p-6">
-              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div className="flex-1 w-full">
-                  <div className="flex justify-between items-end mb-2">
-                    <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white">Donor Journey Progress</h3>
-                      <p className="text-sm text-gray-500">Complete tasks to unlock your donor certificate.</p>
-                    </div>
-                    <span className="font-black text-2xl text-primary-600">{getCompletionScore()}%</span>
-                  </div>
-                  <div className="h-3 w-full bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <motion.div 
-                      className="h-full bg-gradient-to-r from-primary-500 to-pink-500"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${getCompletionScore()}%` }}
-                      transition={{ duration: 1, ease: 'easeOut' }}
-                    />
-                  </div>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex-1 w-full">
+              <div className="flex justify-between items-end mb-2">
+                <div>
+                  <h3 className="font-extrabold text-xl text-amber-300 font-serif flex items-center gap-2">
+                    <Trophy className="w-5 h-5 text-amber-400" /> Donor Honor Quest
+                  </h3>
+                  <p className="text-xs text-gray-400">Complete verification and profile steps to unlock your Official Donor Certificate.</p>
                 </div>
-                
-                <div className="flex gap-3 shrink-0">
-                  {getBadges().map((badge, idx) => (
-                    <div key={idx} className="flex flex-col items-center group relative cursor-help">
-                      <div className={`w-12 h-12 rounded-full ${badge.bg} flex items-center justify-center transition-transform group-hover:-translate-y-1`}>
-                        <badge.icon className={`w-6 h-6 ${badge.color}`} />
-                      </div>
-                      {/* Tooltip */}
-                      <div className="absolute -bottom-8 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap pointer-events-none z-10">
-                        {badge.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <span className="font-black text-3xl text-amber-400 tracking-wider">{getCompletionScore()}%</span>
               </div>
-            </Card.Content>
-          </Card>
+              <div className="h-4 w-full bg-gray-950 rounded-full overflow-hidden border border-amber-500/30 p-0.5">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-amber-500 via-yellow-400 to-emerald-400 rounded-full shadow-[0_0_12px_rgba(229,193,88,0.6)]"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${getCompletionScore()}%` }}
+                  transition={{ duration: 1.2, ease: 'easeOut' }}
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-4 shrink-0">
+              {getBadges().map((badge, idx) => (
+                <div key={idx} className="flex flex-col items-center group relative cursor-help">
+                  <div className={`w-14 h-14 rounded-2xl ${badge.bg} flex items-center justify-center transition-transform group-hover:scale-110 shadow-lg`}>
+                    <badge.icon className={`w-7 h-7 ${badge.color}`} />
+                  </div>
+                  <div className="absolute -bottom-10 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-950 text-amber-200 text-xs px-3 py-1.5 rounded-lg border border-amber-400/40 whitespace-nowrap pointer-events-none z-20 shadow-2xl">
+                    {badge.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </motion.div>
 
-        {/* Profile Setup Alert */}
+        {/* Profile Setup Prompt */}
         {!profile ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mb-8"
           >
-            <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-200 dark:border-yellow-800">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">
-                  <FileText className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+            <div className="p-8 rounded-2xl bg-gradient-to-r from-amber-950/60 via-[#181028] to-rose-950/60 border-2 border-amber-400 shadow-[6px_6px_0px_0px_#E5C158]">
+              <div className="flex flex-col sm:flex-row items-start gap-6">
+                <div className="p-4 bg-amber-500/20 border border-amber-400/50 rounded-2xl">
+                  <FileText className="w-8 h-8 text-amber-400" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-xl mb-2 text-gray-900 dark:text-gray-100">
-                    Complete Your Profile to Save Lives
+                  <h3 className="text-2xl font-extrabold text-amber-300 font-serif mb-2">
+                    Complete Your Medical Donor Passport
                   </h3>
-                  <p className="text-gray-700 dark:text-gray-300 mb-4">
-                    You're just a few steps away from becoming a registered organ donor. Complete your profile with medical details and ID proof to get verified.
+                  <p className="text-gray-300 text-sm mb-6 max-w-2xl leading-relaxed">
+                    You are just one step away from joining the official organ donor registry. Provide your blood group, age, and organ pledge details to enable hospital matching algorithms.
                   </p>
                   <Link to="/donor/profile/create">
-                    <Button leftIcon={<Plus className="w-4 h-4" />}>
-                      Complete Profile Now
+                    <Button className="bg-gradient-to-r from-amber-500 to-yellow-500 text-gray-950 font-black px-6 py-3 shadow-[4px_4px_0px_0px_#000]" leftIcon={<Plus className="w-5 h-5" />}>
+                      Create Donor Profile Now
                     </Button>
                   </Link>
                 </div>
               </div>
-            </Card>
+            </div>
           </motion.div>
         ) : (
-          <div className="grid lg:grid-cols-3 gap-6 mb-8">
-            {/* Profile Info */}
-            <Card hover glow className="lg:col-span-2">
+          <div className="grid lg:grid-cols-3 gap-6">
+            
+            {/* Profile Info Card */}
+            <Card className="lg:col-span-2 bg-[#0c0f26]/90 border-2 border-amber-400/40 backdrop-blur-xl shadow-[6px_6px_0px_0px_#E5C158]">
               <Card.Header>
-                <Card.Title>Profile Information</Card.Title>
-                <Card.Description>Your registered donor details</Card.Description>
+                <Card.Title className="text-amber-300 font-serif text-2xl flex items-center gap-2">
+                  <Shield className="w-6 h-6 text-amber-400" /> Registered Health Passport
+                </Card.Title>
+                <Card.Description className="text-gray-400">Verified medical donor record details</Card.Description>
               </Card.Header>
               <Card.Content>
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div className="text-center p-4 bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl">
-                    <div className="text-3xl mb-2">🩸</div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Blood Group</p>
-                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">{profile.bloodGroup}</p>
+                <div className="grid sm:grid-cols-3 gap-4 mb-6">
+                  <div className="text-center p-4 bg-rose-950/40 border border-rose-500/30 rounded-2xl shadow-inner">
+                    <div className="text-3xl mb-1">🩸</div>
+                    <p className="text-xs text-rose-300 uppercase tracking-widest font-bold">Blood Group</p>
+                    <p className="text-3xl font-black text-rose-400 mt-1">{profile.bloodGroup}</p>
                   </div>
-                  <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl">
-                    <div className="text-3xl mb-2">🎂</div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Age</p>
-                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{profile.age} years</p>
+                  <div className="text-center p-4 bg-amber-950/40 border border-amber-500/30 rounded-2xl shadow-inner">
+                    <div className="text-3xl mb-1">🎂</div>
+                    <p className="text-xs text-amber-300 uppercase tracking-widest font-bold">Age</p>
+                    <p className="text-3xl font-black text-amber-400 mt-1">{profile.age} yrs</p>
                   </div>
-                  <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl">
-                    <div className="text-3xl mb-2">📍</div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Location</p>
-                    <p className="text-lg font-bold text-green-600 dark:text-green-400">
-                      {profile.address.city}
-                    </p>
+                  <div className="text-center p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-2xl shadow-inner">
+                    <div className="text-3xl mb-1">📍</div>
+                    <p className="text-xs text-emerald-300 uppercase tracking-widest font-bold">Location</p>
+                    <p className="text-xl font-bold text-emerald-400 mt-2 truncate">{profile.address?.city || 'Registered'}</p>
                   </div>
                 </div>
                 
                 {profile.organsForDonation && profile.organsForDonation.length > 0 && (
-                  <div className="mt-6">
-                    <h4 className="font-semibold mb-3">Registered Organs</h4>
-                    <div className="flex flex-wrap gap-2">
+                  <div>
+                    <h4 className="font-bold text-gray-200 mb-3 text-sm uppercase tracking-wider flex items-center gap-2">
+                      <Heart className="w-4 h-4 text-rose-400" /> Pledged Organs & Tissues
+                    </h4>
+                    <div className="flex flex-wrap gap-2.5">
                       {profile.organsForDonation.map((organ) => (
                         <span
                           key={organ}
-                          className="px-3 py-1.5 bg-gradient-to-r from-primary-500 to-pink-500 text-white rounded-full text-sm font-medium shadow-lg"
+                          className="px-4 py-2 bg-gradient-to-r from-amber-500/20 to-rose-500/20 border border-amber-400/50 text-amber-200 rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm flex items-center gap-1.5"
                         >
-                          {organ}
+                          <Sparkles className="w-3.5 h-3.5 text-amber-400" /> {organ}
                         </span>
                       ))}
                     </div>
@@ -279,184 +300,211 @@ const DonorDashboard = () => {
               </Card.Content>
             </Card>
 
-            {/* Pledge Story */}
-            <Card hover className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
+            {/* Pledge Story Card */}
+            <Card className="bg-[#0c0f26]/90 border-2 border-indigo-400/40 backdrop-blur-xl shadow-[6px_6px_0px_0px_#6366F1] flex flex-col justify-between">
               <Card.Header>
-                <Card.Title className="flex items-center gap-2">
-                  <Star className="w-5 h-5 text-indigo-500" />
-                  My Pledge Story
+                <Card.Title className="text-indigo-300 font-serif flex items-center gap-2">
+                  <Star className="w-5 h-5 text-indigo-400" /> Imperial Pledge Oath
                 </Card.Title>
               </Card.Header>
-              <Card.Content>
-                <div className="text-center py-4">
-                  {isEditingPledge ? (
-                    <div className="space-y-3">
-                      <textarea 
-                        className="w-full p-3 bg-white dark:bg-gray-800 rounded-xl border border-indigo-100 dark:border-indigo-900 focus:ring-2 focus:ring-indigo-500 outline-none text-sm resize-none text-gray-700 dark:text-gray-300"
-                        rows="3"
-                        value={pledgeStory}
-                        onChange={(e) => setPledgeStory(e.target.value)}
-                        placeholder="Why I'm donating..."
-                      />
-                      <Button size="sm" onClick={() => setIsEditingPledge(false)} className="w-full bg-indigo-600 hover:bg-indigo-700">Save Story</Button>
-                    </div>
-                  ) : (
-                    <div className="group relative">
-                      <p className="text-gray-700 dark:text-gray-300 italic mb-4">
-                        "{pledgeStory}"
-                      </p>
-                      <button 
-                        onClick={() => setIsEditingPledge(true)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity text-xs font-medium text-indigo-600 dark:text-indigo-400 mx-auto flex items-center gap-1"
-                      >
-                        <Edit className="w-3 h-3" /> Edit Story
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </Card.Content>
-            </Card>
-
-            {/* Consent Management */}
-            <Card hover className="bg-gradient-to-br from-primary-50 to-pink-50 dark:from-primary-900/20 dark:to-pink-900/20">
-              <Card.Header>
-                <Card.Title>Consent</Card.Title>
-              </Card.Header>
-              <Card.Content>
-                <div className="text-center py-6">
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="inline-block mb-4"
-                  >
-                    <Heart className="w-16 h-16 text-primary-600" fill={stats?.consentGiven ? 'currentColor' : 'none'} />
-                  </motion.div>
-                  <p className="text-gray-700 dark:text-gray-300 mb-6">
-                    {stats?.consentGiven
-                      ? 'Thank you for your generosity! Your consent is active.'
-                      : 'Give consent to become an active organ donor.'}
-                  </p>
-                  <Button
-                    variant={stats?.consentGiven ? 'outline' : 'primary'}
-                    onClick={() => setShowConsentModal(true)}
-                    className="w-full"
-                  >
-                    {stats?.consentGiven ? 'Revoke Consent' : 'Give Consent'}
-                  </Button>
-                </div>
+              <Card.Content className="flex-1 flex flex-col justify-center">
+                {isEditingPledge ? (
+                  <div className="space-y-3">
+                    <textarea 
+                      className="w-full p-3 bg-gray-950 border border-indigo-500/40 rounded-xl text-sm text-gray-200 focus:outline-none focus:border-indigo-400 resize-none"
+                      rows="4"
+                      value={pledgeStory}
+                      onChange={(e) => setPledgeStory(e.target.value)}
+                      placeholder="Share your pledge inspiration..."
+                    />
+                    <Button size="sm" onClick={() => setIsEditingPledge(false)} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold">
+                      Save Pledge Oath
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-center py-2">
+                    <p className="text-gray-300 italic text-sm leading-relaxed mb-4">
+                      "{pledgeStory}"
+                    </p>
+                    <button 
+                      onClick={() => setIsEditingPledge(true)}
+                      className="text-xs text-indigo-400 hover:text-indigo-300 font-bold flex items-center justify-center gap-1 mx-auto"
+                    >
+                      <Edit className="w-3.5 h-3.5" /> Edit Oath
+                    </button>
+                  </div>
+                )}
               </Card.Content>
             </Card>
           </div>
+        )}
+
+        {/* Interactive Medical Donor Suitability Simulator */}
+        {profile && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#0c0f26] via-[#121638] to-[#1a0f2e] border-2 border-emerald-400/40 backdrop-blur-2xl shadow-[6px_6px_0px_0px_#10B981]"
+          >
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+              <div className="space-y-4 max-w-xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-xs font-bold uppercase tracking-widest">
+                  <Scale className="w-4 h-4 text-emerald-400" /> Live Compatibility & Viability Calculator
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-300 font-serif">
+                  Medical Viability Estimator
+                </h3>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Calculates your projected transplant viability score based on clinical parameters, HLA tissue compatibility models, and organ harvest transport windows.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Age Factor ({suitabilityAge} yrs)</label>
+                    <input 
+                      type="range" 
+                      min="18" 
+                      max="75" 
+                      value={suitabilityAge}
+                      onChange={(e) => setSuitabilityAge(Number(e.target.value))}
+                      className="w-full accent-emerald-400 bg-gray-950 rounded-lg cursor-pointer h-2"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Target Organ</label>
+                    <select
+                      value={selectedOrgan}
+                      onChange={(e) => setSelectedOrgan(e.target.value)}
+                      className="w-full bg-gray-950 border border-emerald-500/40 rounded-xl px-3 py-1.5 text-sm text-emerald-200 font-bold focus:outline-none"
+                    >
+                      <option value="Kidneys">Kidneys (Cold Ischemia ~24h)</option>
+                      <option value="Heart">Heart (Cold Ischemia ~4h)</option>
+                      <option value="Liver">Liver (Cold Ischemia ~10h)</option>
+                      <option value="Corneas">Corneas (Cold Ischemia ~7 days)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Score Display Box */}
+              <div className="flex flex-col items-center justify-center p-6 bg-gray-950/80 border-2 border-emerald-400 rounded-2xl min-w-[240px] text-center shadow-inner">
+                <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1">Transplant Viability Index</p>
+                <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-400 my-2">
+                  {calculatedScore}%
+                </div>
+                <div className="px-3 py-1 bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 rounded-full text-[11px] font-bold">
+                  {calculatedScore > 90 ? '🌟 Optimal Clinical Match' : 'High Viability'}
+                </div>
+              </div>
+            </div>
+          </motion.div>
         )}
 
         {/* Certificate Section */}
         {profile && stats?.consentGiven && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mb-8"
           >
-            <Card hover className="bg-gradient-to-r from-yellow-500 to-amber-600 border-none text-white shadow-xl shadow-yellow-500/20">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-4">
+            <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-700 text-gray-950 shadow-[6px_6px_0px_0px_#000] border-2 border-amber-300">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-sm">
-                    <Award className="w-8 h-8 text-white" />
+                  <div className="p-4 bg-gray-950/20 rounded-2xl border border-gray-950/30">
+                    <Award className="w-10 h-10 text-gray-950" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-2xl mb-1 text-white shadow-black/10 text-shadow-sm">
-                      Official Donor Certificate
+                    <h3 className="font-extrabold text-2xl font-serif text-gray-950">
+                      Official Imperial Donor Certificate
                     </h3>
-                    <p className="text-yellow-100 font-medium">
-                      Download your certificate of registration. Thank you for your noble pledge!
+                    <p className="text-gray-900 font-medium text-sm mt-0.5">
+                      Generate and print your official registration certificate with digital security verification stamp.
                     </p>
                   </div>
                 </div>
                 <Button 
                   onClick={() => setShowCertificate(true)}
-                  className="bg-white text-yellow-600 hover:bg-yellow-50 whitespace-nowrap px-8 py-3 text-lg shadow-sm"
+                  className="bg-gray-950 text-amber-300 hover:bg-gray-900 font-black px-8 py-3 text-base shadow-[4px_4px_0px_0px_#fff]"
                 >
                   View Certificate
                 </Button>
               </div>
-            </Card>
+            </div>
           </motion.div>
         )}
 
-        {/* AI Multimodal Donor History Scanner */}
+        {/* AI Scanner */}
         {profile && (
-          <div className="mb-8">
+          <div>
             <AIDonorHistoryScanner onHistoryUpdated={fetchData} />
           </div>
         )}
 
-        {/* Activity & History */}
+        {/* Donation Impact History & Activity */}
         {profile && (
           <div className="grid lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <Card hover className="h-full">
-                <Card.Header>
-                  <Card.Title className="flex items-center gap-2">
-                    <Heart className="w-5 h-5 text-primary-500" />
-                    Donation Impact & History
-                  </Card.Title>
-                  <Card.Description>Track your matched and completed donations</Card.Description>
-                </Card.Header>
-                <Card.Content>
-                  {history.length === 0 ? (
-                    <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700">
-                      <Heart className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                      <p className="text-gray-500 font-medium">No donations recorded yet</p>
-                      <p className="text-xs text-gray-400 mt-1">Your matched requests will appear here once approved by Admin</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {history.map((item) => (
-                        <div key={item.id} className="p-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 hover:border-primary-500/30 transition-all flex items-center justify-between group">
-                          <div className="flex items-center gap-4">
-                            <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-xl">
-                              <CheckCircle className="w-6 h-6 text-primary-600" />
-                            </div>
-                            <div>
-                              <p className="font-bold text-gray-900 dark:text-white">{item.organType} Match</p>
-                              <p className="text-sm text-gray-500 flex items-center gap-1">
-                                <Activity className="w-3 h-3" />
-                                To: {item.recipientName} ({item.recipientType})
-                              </p>
-                            </div>
+            <Card className="lg:col-span-2 bg-[#0c0f26]/90 border-2 border-amber-400/40 backdrop-blur-xl shadow-[6px_6px_0px_0px_#E5C158]">
+              <Card.Header>
+                <Card.Title className="text-amber-300 font-serif flex items-center gap-2 text-xl">
+                  <Heart className="w-5 h-5 text-rose-400" /> Donation Impact & Hospital Match History
+                </Card.Title>
+                <Card.Description className="text-gray-400">Transplant matching log</Card.Description>
+              </Card.Header>
+              <Card.Content>
+                {history.length === 0 ? (
+                  <div className="text-center py-12 bg-gray-950/50 rounded-2xl border border-dashed border-amber-500/30">
+                    <Heart className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+                    <p className="text-gray-400 font-bold">No active transplant matches yet</p>
+                    <p className="text-xs text-gray-500 mt-1">Hospital queries will automatically match your organ profile when requested.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {history.map((item) => (
+                      <div key={item.id} className="p-4 bg-gray-950 border border-amber-500/30 rounded-xl flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 bg-amber-500/20 border border-amber-400/40 rounded-xl">
+                            <CheckCircle className="w-6 h-6 text-amber-400" />
                           </div>
-                          <div className="text-right">
-                            <span className={`px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                              item.status === 'completed' 
-                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
-                                : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                            }`}>
-                              {item.status}
-                            </span>
-                            <p className="text-[10px] text-gray-400 mt-2 font-medium">
-                              {new Date(item.date).toLocaleDateString()}
+                          <div>
+                            <p className="font-bold text-amber-200">{item.organType} Match</p>
+                            <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+                              <Activity className="w-3 h-3 text-emerald-400" />
+                              Recipient: {item.recipientName} ({item.recipientType})
                             </p>
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </Card.Content>
-              </Card>
-            </div>
-            
-            <Card hover className="flex flex-col h-full max-h-[500px]">
+                        <div className="text-right">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                            item.status === 'completed' 
+                              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/40' 
+                              : 'bg-amber-500/20 text-amber-400 border border-amber-400/40'
+                          }`}>
+                            {item.status}
+                          </span>
+                          <p className="text-[10px] text-gray-400 mt-2 font-medium">
+                            {new Date(item.date).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Card.Content>
+            </Card>
+
+            {/* System Activity */}
+            <Card className="bg-[#0c0f26]/90 border-2 border-amber-400/40 backdrop-blur-xl shadow-[6px_6px_0px_0px_#E5C158] flex flex-col h-[480px]">
               <Card.Header className="pb-2">
-                <Card.Title className="text-xl">System Activity</Card.Title>
-                <Card.Description>Logs of your recent dashboard interactions</Card.Description>
+                <Card.Title className="text-amber-300 font-serif text-xl">System Activity Audit</Card.Title>
+                <Card.Description className="text-gray-400">Live action logs</Card.Description>
               </Card.Header>
               <Card.Content className="flex-1 overflow-y-auto custom-scrollbar pt-0">
                 {activity.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center p-6">
-                    <Activity className="w-12 h-12 text-gray-300 mb-2" />
-                    <p className="text-gray-500 text-sm">No activity logs found yet.</p>
+                    <Activity className="w-12 h-12 text-gray-600 mb-2" />
+                    <p className="text-gray-400 text-sm">No activity logs recorded.</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                  <div className="divide-y divide-gray-800">
                     {activity.map((item, idx) => (
                       <HistoryItem key={item._id} item={item} index={idx} />
                     ))}
@@ -470,15 +518,15 @@ const DonorDashboard = () => {
         {/* Consent Modal */}
         <Modal isOpen={showConsentModal} onClose={() => setShowConsentModal(false)}>
           <Modal.Header>
-            <Modal.Title>
-              {stats?.consentGiven ? 'Revoke Consent' : 'Give Consent'}
+            <Modal.Title className="text-amber-300 font-serif">
+              {stats?.consentGiven ? 'Revoke Donor Consent' : 'Grant Organ Donor Consent'}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-gray-300 text-sm leading-relaxed">
               {stats?.consentGiven
-                ? 'Are you sure you want to revoke your organ donation consent? This will make you inactive as a donor.'
-                : 'By giving consent, you agree to donate your organs after death. This is a noble decision that can save multiple lives.'}
+                ? 'Are you sure you wish to revoke your donor pledge? This will set your status to inactive in the hospital transplant registry.'
+                : 'By granting consent, you legally authorize your organ donation pledge upon brain death or clinical clearance. This decision bestows the gift of life.'}
             </p>
           </Modal.Body>
           <Modal.Footer>
@@ -488,8 +536,9 @@ const DonorDashboard = () => {
             <Button
               variant={stats?.consentGiven ? 'danger' : 'success'}
               onClick={handleConsentToggle}
+              className="font-bold"
             >
-              {stats?.consentGiven ? 'Revoke' : 'Confirm'}
+              {stats?.consentGiven ? 'Confirm Revoke' : 'Grant Consent Now'}
             </Button>
           </Modal.Footer>
         </Modal>

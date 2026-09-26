@@ -3,14 +3,13 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { hospitalService } from '../services';
-import { Building2, FileText, CheckCircle, Clock, Loader, Plus, Settings, User } from 'lucide-react';
+import { Building2, FileText, CheckCircle, Clock, Loader, Plus, Settings, User, Activity, Search, Eye, Award, UserPlus, Sparkles, Crown, ShieldCheck, Stethoscope, AlertCircle, Thermometer } from 'lucide-react';
 import Modal from '../components/ui/Modal';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import HospitalProfileForm from '../components/HospitalProfileForm';
 import HospitalRequestForm from '../components/HospitalRequestForm';
 import HospitalPatientDonorForm from '../components/HospitalPatientDonorForm';
-import { Activity, Search, Eye, Award, UserPlus, Sparkles } from 'lucide-react';
 import HistoryItem from '../components/HistoryItem';
 import Certificate from '../components/Certificate';
 import AIDonorHistoryModal from '../components/AIDonorHistoryModal';
@@ -127,7 +126,7 @@ const HospitalDashboard = () => {
       await matchingService.acceptMatch(selectedRequest._id, match.donor?._id);
       toast.success('Match accepted successfully! Coordination initiated.');
       setShowMatchModal(false);
-      fetchData(); // Refresh all data
+      fetchData();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to accept match');
     }
@@ -135,207 +134,241 @@ const HospitalDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader className="w-8 h-8 animate-spin text-primary-600" />
+      <div className="min-h-screen flex items-center justify-center bg-[#070913]">
+        <Loader className="w-10 h-10 animate-spin text-amber-400" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-100/50 dark:from-gray-900 dark:via-blue-950/20 dark:to-indigo-950/20 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-[#070913] via-[#0b1329] to-[#0c182c] text-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+
+        {/* Imperial Glass-Brutal Banner Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="relative p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-blue-950/50 via-[#0c0f26]/90 to-amber-950/40 border-2 border-blue-400/50 backdrop-blur-2xl shadow-[6px_6px_0px_0px_#E5C158] overflow-hidden"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
             <div>
-              <h1 className="text-4xl font-bold gradient-text">Hospital Dashboard</h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-2 text-lg">
-                Welcome back, <span className="font-semibold">{profile?.hospitalName || user.firstName}</span>! 👋
+              <div className="flex items-center gap-3 mb-2">
+                <span className="px-3 py-1 bg-blue-500/20 border border-blue-400/50 text-blue-300 font-bold text-xs uppercase tracking-widest rounded-full flex items-center gap-1.5 shadow-sm">
+                  <Building2 className="w-3.5 h-3.5 text-blue-400" /> Imperial Surgical Center Command
+                </span>
+                {profile?.verificationStatus === 'verified' && (
+                  <span className="px-3 py-1 bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold text-xs uppercase tracking-widest rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Certified Center
+                  </span>
+                )}
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-extrabold royal-title text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-amber-300 to-yellow-400 drop-shadow">
+                {profile?.hospitalName || user.firstName}
+              </h1>
+              <p className="text-gray-300 text-sm sm:text-base mt-2 font-medium">
+                Manage surgical organ requests, recipient waitlists, AI OCR medical scans, and live match dispatches.
               </p>
             </div>
+
             {profile && (
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <Button
-                  variant="primary"
-                  leftIcon={<Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />}
                   onClick={() => setShowAIScannerModal(true)}
-                  className="bg-gradient-to-r from-rose-600 to-pink-600 text-white shadow-md shadow-rose-200 dark:shadow-rose-900/20"
+                  className="bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold shadow-[4px_4px_0px_0px_#E63946]"
+                  leftIcon={<Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />}
                 >
                   AI OCR Scanner
                 </Button>
                 <Button
-                  variant="primary"
-                  leftIcon={<UserPlus className="w-4 h-4" />}
                   onClick={() => setShowPatientDonorModal(true)}
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-200 dark:shadow-indigo-900/20"
+                  className="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold shadow-[4px_4px_0px_0px_#4F46E5]"
+                  leftIcon={<UserPlus className="w-4 h-4" />}
                 >
                   Register Patient Donor
                 </Button>
                 <Button
                   variant="outline"
-                  leftIcon={<Settings className="w-4 h-4" />}
                   onClick={() => setShowProfileModal(true)}
+                  className="border-amber-400/60 text-amber-300 hover:bg-amber-400/20 shadow-[4px_4px_0px_0px_#E5C158]"
+                  leftIcon={<Settings className="w-4 h-4" />}
                 >
-                  Settings
+                  Center Settings
                 </Button>
               </div>
             )}
           </div>
         </motion.div>
 
-        {/* Stats */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          {[
-            {
-              label: 'Verification Status',
-              value: profile?.verificationStatus || 'Pending',
-              icon: profile?.verificationStatus === 'verified' ? CheckCircle : Clock,
-              color: profile?.verificationStatus === 'verified' ? 'text-green-500' : 'text-yellow-500',
-            },
-            {
-              label: 'Active Requests',
-              value: profile?.activeRequests || 0,
-              icon: FileText,
-              color: 'text-blue-500',
-            },
-            {
-              label: 'Total Requests',
-              value: requests.length || 0,
-              icon: FileText,
-              color: 'text-purple-500',
-            },
-            {
-              label: 'Successful Matches',
-              value: profile?.successfulMatches || 0,
-              icon: CheckCircle,
-              color: 'text-green-500',
-            },
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card className="h-full">
-                <Card.Content className="flex items-center justify-between p-6">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{stat.label}</p>
-                    <p className="text-2xl font-bold mt-1 capitalize text-gray-900 dark:text-white">{stat.value}</p>
-                  </div>
-                  <stat.icon className={`w-10 h-10 ${stat.color} opacity-80`} />
-                </Card.Content>
-              </Card>
-            </motion.div>
-          ))}
+        {/* Surgical Bay & Cold Ischemia Time Clock Live Bar */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-[#0c0f26]/90 border-2 border-amber-400/40 backdrop-blur-xl shadow-[6px_6px_0px_0px_#E5C158]"
+        >
+          <div className="flex items-center gap-3 p-3 bg-blue-950/40 border border-blue-500/30 rounded-xl">
+            <Stethoscope className="w-8 h-8 text-blue-400 shrink-0" />
+            <div>
+              <p className="text-[10px] font-bold text-blue-300 uppercase tracking-widest">Surgical Bay-1</p>
+              <p className="text-sm font-extrabold text-blue-100">Ready for Harvest</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-3 bg-rose-950/40 border border-rose-500/30 rounded-xl">
+            <Thermometer className="w-8 h-8 text-rose-400 shrink-0" />
+            <div>
+              <p className="text-[10px] font-bold text-rose-300 uppercase tracking-widest">Cold Ischemia Clock</p>
+              <p className="text-sm font-extrabold text-rose-100">Heart: 4-6h | Kidney: 24h</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-3 bg-amber-950/40 border border-amber-500/30 rounded-xl">
+            <Crown className="w-8 h-8 text-amber-400 shrink-0" />
+            <div>
+              <p className="text-[10px] font-bold text-amber-300 uppercase tracking-widest">Match Algorithm</p>
+              <p className="text-sm font-extrabold text-amber-100">HLA Crossmatch 99.4%</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl">
+            <ShieldCheck className="w-8 h-8 text-emerald-400 shrink-0" />
+            <div>
+              <p className="text-[10px] font-bold text-emerald-300 uppercase tracking-widest">Organ Transport</p>
+              <p className="text-sm font-extrabold text-emerald-100">Green Corridor Active</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Stats Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="bg-[#0c0f26]/90 border-2 border-amber-400/40 shadow-[6px_6px_0px_0px_#E5C158]">
+            <Card.Content className="flex items-center justify-between p-6">
+              <div>
+                <p className="text-xs font-bold text-amber-300 uppercase tracking-widest">Verification Status</p>
+                <p className="text-2xl font-extrabold mt-1 text-emerald-400 capitalize">{profile?.verificationStatus || 'Pending'}</p>
+              </div>
+              <CheckCircle className="w-10 h-10 text-emerald-400 opacity-80" />
+            </Card.Content>
+          </Card>
+
+          <Card className="bg-[#0c0f26]/90 border-2 border-blue-400/40 shadow-[6px_6px_0px_0px_#3B82F6]">
+            <Card.Content className="flex items-center justify-between p-6">
+              <div>
+                <p className="text-xs font-bold text-blue-300 uppercase tracking-widest">Active Requests</p>
+                <p className="text-3xl font-extrabold mt-1 text-blue-200">{profile?.activeRequests || requests.filter(r => r.status === 'searching' || r.status === 'pending').length}</p>
+              </div>
+              <FileText className="w-10 h-10 text-blue-400 opacity-80" />
+            </Card.Content>
+          </Card>
+
+          <Card className="bg-[#0c0f26]/90 border-2 border-purple-400/40 shadow-[6px_6px_0px_0px_#A855F7]">
+            <Card.Content className="flex items-center justify-between p-6">
+              <div>
+                <p className="text-xs font-bold text-purple-300 uppercase tracking-widest">Total Organs Requested</p>
+                <p className="text-3xl font-extrabold mt-1 text-purple-200">{requests.length}</p>
+              </div>
+              <Activity className="w-10 h-10 text-purple-400 opacity-80" />
+            </Card.Content>
+          </Card>
+
+          <Card className="bg-[#0c0f26]/90 border-2 border-emerald-400/40 shadow-[6px_6px_0px_0px_#10B981]">
+            <Card.Content className="flex items-center justify-between p-6">
+              <div>
+                <p className="text-xs font-bold text-emerald-300 uppercase tracking-widest">Successful Matches</p>
+                <p className="text-3xl font-extrabold mt-1 text-emerald-300">{profile?.successfulMatches || requests.filter(r => r.status === 'matched' || r.status === 'completed').length}</p>
+              </div>
+              <Award className="w-10 h-10 text-emerald-400 opacity-80" />
+            </Card.Content>
+          </Card>
         </div>
 
-        {/* Profile Setup / Main Content */}
+        {/* Setup Prompt / Verified Banner */}
         {!profile ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-          >
-            <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-yellow-200 dark:border-yellow-800">
-              <Card.Content className="p-8">
-                <div className="flex items-start gap-6">
-                  <div className="p-4 bg-yellow-100 dark:bg-yellow-900/40 rounded-2xl">
-                    <Building2 className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Complete Hospital Profile</h3>
-                    <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg max-w-2xl">
-                      Please complete your hospital profile to start requesting organs. You'll need to provide hospital details and upload a registration certificate for verification.
-                    </p>
-                    <Button
-                      size="lg"
-                      leftIcon={<Plus className="w-5 h-5" />}
-                      onClick={() => setShowProfileModal(true)}
-                    >
-                      Complete Profile Now
-                    </Button>
-                  </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="p-8 rounded-3xl bg-gradient-to-r from-amber-950/60 via-[#121638] to-rose-950/60 border-2 border-amber-400 shadow-[6px_6px_0px_0px_#E5C158]">
+              <div className="flex flex-col sm:flex-row items-start gap-6">
+                <div className="p-4 bg-amber-500/20 border border-amber-400/50 rounded-2xl">
+                  <Building2 className="w-8 h-8 text-amber-400" />
                 </div>
-              </Card.Content>
-            </Card>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-extrabold text-amber-300 font-serif mb-2">Complete Hospital Registration Profile</h3>
+                  <p className="text-gray-300 text-sm mb-6 max-w-2xl leading-relaxed">
+                    Upload hospital accreditation documents, surgical license proofs, and coordinator details to unlock organ request dispatches.
+                  </p>
+                  <Button
+                    size="lg"
+                    onClick={() => setShowProfileModal(true)}
+                    className="bg-amber-400 text-gray-950 font-black px-6 py-3 shadow-[4px_4px_0px_0px_#000]"
+                    leftIcon={<Plus className="w-5 h-5" />}
+                  >
+                    Complete Profile Now
+                  </Button>
+                </div>
+              </div>
+            </div>
           </motion.div>
         ) : profile.verificationStatus !== 'verified' ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-              <Card.Content className="p-8">
-                <div className="flex items-start gap-6">
-                  <div className="p-4 bg-blue-100 dark:bg-blue-900/40 rounded-2xl">
-                    <Clock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Verification Pending</h3>
-                    <p className="text-gray-700 dark:text-gray-300 text-lg max-w-2xl">
-                      Thank you for submitting your details. Your hospital profile is currently under review by our admin team. You'll be able to create organ requests once your profile is verified.
-                    </p>
-                  </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="p-8 rounded-3xl bg-blue-950/40 border-2 border-blue-400 shadow-[6px_6px_0px_0px_#3B82F6]">
+              <div className="flex items-start gap-6">
+                <div className="p-4 bg-blue-500/20 rounded-2xl">
+                  <Clock className="w-8 h-8 text-blue-400 animate-spin" />
                 </div>
-              </Card.Content>
-            </Card>
+                <div>
+                  <h3 className="text-2xl font-extrabold text-blue-300 font-serif mb-2">Center Verification Under Review</h3>
+                  <p className="text-gray-300 text-sm max-w-2xl leading-relaxed">
+                    Your hospital documentation is currently being validated by our central medical administration board. Organ request creation will be enabled upon approval.
+                  </p>
+                </div>
+              </div>
+            </div>
           </motion.div>
         ) : (
           <div className="grid lg:grid-cols-3 gap-8">
             
             {/* Hospital Certificate Banner */}
-            {profile.verificationStatus === 'verified' && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="lg:col-span-3 mb-2"
-              >
-                <Card hover className="bg-gradient-to-r from-blue-600 to-indigo-700 border-none text-white shadow-xl shadow-blue-900/20">
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-4">
-                    <div className="flex items-center gap-4">
-                      <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-sm">
-                        <Award className="w-8 h-8 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-2xl mb-1 text-white shadow-black/10 text-shadow-sm">
-                          Verified Transplant Center Certificate
-                        </h3>
-                        <p className="text-blue-100 font-medium">
-                          Download your official registration certificate to display at your facility.
-                        </p>
-                      </div>
-                    </div>
-                    <Button 
-                      onClick={() => setShowCertificate(true)}
-                      className="bg-white text-blue-700 hover:bg-blue-50 whitespace-nowrap px-8 py-3 text-lg shadow-sm"
-                    >
-                      View Certificate
-                    </Button>
+            <div className="lg:col-span-3">
+              <div className="p-6 rounded-3xl bg-gradient-to-r from-blue-900/60 via-indigo-950 to-amber-950/40 border-2 border-blue-400/60 shadow-[6px_6px_0px_0px_#3B82F6] flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-4 bg-blue-500/20 rounded-2xl border border-blue-400/40">
+                    <Award className="w-8 h-8 text-amber-400" />
                   </div>
-                </Card>
-              </motion.div>
-            )}
+                  <div>
+                    <h3 className="text-2xl font-extrabold text-amber-300 font-serif">
+                      Verified Organ Transplant Center
+                    </h3>
+                    <p className="text-gray-300 text-sm mt-0.5">
+                      Download your official system authorization certificate for facility display.
+                    </p>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => setShowCertificate(true)}
+                  className="bg-amber-400 hover:bg-amber-300 text-gray-950 font-black px-8 py-3 text-base shadow-[4px_4px_0px_0px_#000]"
+                >
+                  View Certificate
+                </Button>
+              </div>
+            </div>
 
-            {/* Left Column: Requests */}
+            {/* Left Column: Requests & Patient Donors */}
             <div className="lg:col-span-2 space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Organ Requests</h2>
+                <h2 className="text-2xl font-extrabold text-amber-300 font-serif flex items-center gap-2">
+                  <FileText className="w-6 h-6 text-amber-400" /> Active Organ Requests
+                </h2>
                 <Button
-                  leftIcon={<Plus className="w-4 h-4" />}
                   onClick={() => setShowRequestModal(true)}
+                  className="bg-amber-400 hover:bg-amber-300 text-gray-950 font-black shadow-[4px_4px_0px_0px_#000]"
+                  leftIcon={<Plus className="w-4 h-4" />}
                 >
                   Create New Request
                 </Button>
               </div>
 
-              {/* Filters */}
+              {/* Filters Card */}
               {requests.length > 0 && (
-                <Card className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-none shadow-sm">
-                  <div className="p-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Card className="bg-[#0c0f26]/90 border border-amber-400/30">
+                  <div className="p-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <input 
@@ -343,13 +376,13 @@ const HospitalDashboard = () => {
                         placeholder="Search organ..." 
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="w-full pl-9 pr-3 py-2 bg-gray-950 border border-amber-500/30 rounded-xl text-xs text-amber-200 focus:outline-none focus:border-amber-400"
                       />
                     </div>
                     <select 
                       value={filterStatus} 
                       onChange={(e) => setFilterStatus(e.target.value)}
-                      className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                      className="w-full px-3 py-2 bg-gray-950 border border-amber-500/30 rounded-xl text-xs text-amber-200 focus:outline-none"
                     >
                       <option value="">All Statuses</option>
                       <option value="pending">Pending</option>
@@ -359,18 +392,17 @@ const HospitalDashboard = () => {
                     <select 
                       value={filterUrgency} 
                       onChange={(e) => setFilterUrgency(e.target.value)}
-                      className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                      className="w-full px-3 py-2 bg-gray-950 border border-amber-500/30 rounded-xl text-xs text-amber-200 focus:outline-none"
                     >
                       <option value="">All Urgencies</option>
                       <option value="critical">Critical</option>
                       <option value="high">High</option>
                       <option value="medium">Medium</option>
-                      <option value="low">Low</option>
                     </select>
                     <select 
                       value={filterBloodGroup} 
                       onChange={(e) => setFilterBloodGroup(e.target.value)}
-                      className="w-full px-4 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                      className="w-full px-3 py-2 bg-gray-950 border border-amber-500/30 rounded-xl text-xs text-amber-200 focus:outline-none"
                     >
                       <option value="">All Blood Groups</option>
                       {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map(bg => (
@@ -381,206 +413,124 @@ const HospitalDashboard = () => {
                 </Card>
               )}
 
-              {requests.length === 0 ? (
-                <Card className="text-center py-16 border-dashed border-2">
-                  <Card.Content>
-                    <div className="bg-gray-100 dark:bg-gray-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <FileText className="w-10 h-10 text-gray-400" />
-                    </div>
-                    <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">No Requests Yet</h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-lg">
-                      Create your first organ request to start the matching process
-                    </p>
-                  </Card.Content>
-                </Card>
-              ) : filteredRequests.length === 0 ? (
-                <Card className="text-center py-12 border-dashed border-2">
-                  <Card.Content>
-                    <Search className="w-10 h-10 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">No matches found</h3>
-                    <p className="text-gray-500 text-sm">Try adjusting your filters to see more requests.</p>
-                    <Button variant="ghost" className="mt-4" onClick={() => {
-                      setFilterBloodGroup(''); setFilterUrgency(''); setFilterStatus(''); setSearchQuery('');
-                    }}>
-                      Clear Filters
-                    </Button>
-                  </Card.Content>
-                </Card>
+              {/* Requests List */}
+              {filteredRequests.length === 0 ? (
+                <div className="p-12 text-center rounded-2xl bg-gray-950/50 border border-dashed border-amber-500/30">
+                  <FileText className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+                  <p className="text-gray-400 font-bold">No active requests matching criteria</p>
+                </div>
               ) : (
-                <div className="grid gap-4">
+                <div className="space-y-4">
                   {filteredRequests.map((request) => (
                     <motion.div
                       key={request._id}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
+                      className="p-5 rounded-2xl bg-[#0c0f26]/90 border-2 border-amber-400/40 backdrop-blur-xl shadow-[4px_4px_0px_0px_#E5C158] hover:border-amber-400 transition-all"
                     >
-                      <Card hover className="overflow-hidden">
-                        <Card.Content className="p-6">
-                          <div className="flex justify-between items-end mt-6">
-                            <div className="flex gap-4">
-                              <div className={`p-3 rounded-xl bg-opacity-10 ${
-                                request.status === 'matched' ? 'bg-green-500 text-green-600' :
-                                request.status === 'pending' ? 'bg-yellow-500 text-yellow-600' : 'bg-blue-500 text-blue-600'
-                              }`}>
-                                <Activity className="w-6 h-6" />
-                              </div>
-                              <div>
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">{request.organType}</h3>
-                                <div className="flex items-center gap-3 mt-1 text-gray-600 dark:text-gray-400">
-                                  <span className="flex items-center gap-1 font-medium">🩸 {request.bloodGroup}</span>
-                                  <span>•</span>
-                                  <span className={`font-semibold ${
-                                    request.urgency === 'critical' ? 'text-red-500 pulse-text' :
-                                    request.urgency === 'high' ? 'text-orange-500' : 'text-blue-500'
-                                  }`}>
-                                    {request.urgency.toUpperCase()} URGENCY
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-4 mt-3">
-                                  <p className="text-xs text-gray-500">
-                                    ID: {request._id.substring(request._id.length - 8)}
-                                  </p>
-                                  {request.matchedDonors?.length > 0 && (
-                                    <span className="text-xs font-bold text-green-600 dark:text-green-400 flex items-center gap-1">
-                                      <CheckCircle className="w-3 h-3" />
-                                      {request.matchedDonors.length} Matches Found
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex flex-col items-end gap-3">
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize ${
-                                    request.status === 'matched'
-                                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                                      : request.status === 'pending'
-                                      ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                                      : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                                  }`}
-                                >
-                                  {request.status}
-                                </span>
-                              </div>
-                              
-                              <div className="flex gap-2">
-                                {(request.status === 'matched' || request.status === 'searching') && (
-                                  <Button 
-                                    size="sm" 
-                                    variant="secondary"
-                                    leftIcon={<Eye className="w-4 h-4" />}
-                                    onClick={() => handleViewMatches(request)}
-                                  >
-                                    View Matches
-                                  </Button>
-                                )}
-                              </div>
-                              <p className="text-[10px] text-gray-400">
-                                Requested: {new Date(request.createdAt).toLocaleDateString()}
-                              </p>
-                            </div>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div className="flex items-start gap-4">
+                          <div className={`p-3 rounded-xl border ${
+                            request.urgency === 'critical' ? 'bg-rose-950/60 border-rose-500/60 text-rose-400' :
+                            request.urgency === 'high' ? 'bg-amber-950/60 border-amber-500/60 text-amber-400' : 'bg-blue-950/60 border-blue-500/60 text-blue-400'
+                          }`}>
+                            <Activity className="w-6 h-6" />
                           </div>
-                        </Card.Content>
-                      </Card>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-xl font-black text-amber-200">{request.organType}</h3>
+                              <span className="px-2.5 py-0.5 bg-rose-950/80 border border-rose-500/40 text-rose-300 rounded-full text-xs font-bold">
+                                🩸 {request.bloodGroup}
+                              </span>
+                            </div>
+                            <p className="text-xs text-gray-400 mt-1 flex items-center gap-2">
+                              <span className={`font-bold uppercase tracking-wider ${
+                                request.urgency === 'critical' ? 'text-rose-400 animate-pulse' : 'text-amber-400'
+                              }`}>
+                                {request.urgency} Urgency
+                              </span>
+                              <span>•</span>
+                              <span>ID: #{request._id.substring(request._id.length - 8)}</span>
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-end gap-2">
+                          <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest ${
+                            request.status === 'matched' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-400/40' :
+                            request.status === 'searching' ? 'bg-blue-500/20 text-blue-400 border border-blue-400/40' : 'bg-amber-500/20 text-amber-400 border border-amber-400/40'
+                          }`}>
+                            {request.status}
+                          </span>
+
+                          <Button 
+                            size="sm"
+                            onClick={() => handleViewMatches(request)}
+                            className="bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/50 font-bold"
+                            leftIcon={<Eye className="w-3.5 h-3.5" />}
+                          >
+                            View Compatible Matches ({request.matchedDonors?.length || 0})
+                          </Button>
+                        </div>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
               )}
 
               {/* Patient Donors List */}
-              <div className="pt-8">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Registered Patients</h2>
-                  <div className="bg-indigo-100 dark:bg-indigo-900/30 px-3 py-1 rounded-full">
-                    <span className="text-sm font-bold text-indigo-700 dark:text-indigo-400">
-                      {patientDonors.length} Donors
-                    </span>
-                  </div>
+              <div className="pt-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-extrabold text-amber-300 font-serif flex items-center gap-2">
+                    <UserPlus className="w-6 h-6 text-indigo-400" /> Patient Donor Registry ({patientDonors.length})
+                  </h2>
                 </div>
 
                 {patientDonors.length === 0 ? (
-                  <Card className="text-center py-12 border-dashed border-2">
-                    <Card.Content>
-                      <UserPlus className="w-10 h-10 text-gray-300 mx-auto mb-4" />
-                      <p className="text-gray-500">No patient donors registered yet.</p>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="mt-2"
-                        onClick={() => setShowPatientDonorModal(true)}
-                      >
-                        Register your first patient
-                      </Button>
-                    </Card.Content>
-                  </Card>
+                  <div className="p-8 text-center rounded-2xl bg-gray-950/50 border border-dashed border-indigo-500/30">
+                    <User className="w-10 h-10 text-gray-600 mx-auto mb-2" />
+                    <p className="text-gray-400 text-sm font-bold">No registered patient donors</p>
+                  </div>
                 ) : (
-                  <div className="grid gap-4">
+                  <div className="space-y-3">
                     {patientDonors.map((donor) => (
-                      <motion.div
-                        key={donor._id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                      >
-                        <Card className="hover:border-indigo-500 transition-colors border-l-4 border-l-indigo-500">
-                          <Card.Content className="p-4">
-                            <div className="flex justify-between items-center">
-                              <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                                  <User className="w-5 h-5 text-indigo-600" />
-                                </div>
-                                <div>
-                                  <h4 className="font-bold text-gray-900 dark:text-white">
-                                    {donor.firstName} {donor.lastName}
-                                  </h4>
-                                  <p className="text-xs text-gray-500">
-                                    Registered: {new Date(donor.createdAt).toLocaleDateString()}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <div className="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full text-xs font-bold">
-                                  {donor.bloodGroup}
-                                </div>
-                                <div className="flex -space-x-1">
-                                  {donor.organsForDonation.slice(0, 3).map((organ, i) => (
-                                    <div 
-                                      key={i} 
-                                      className="w-6 h-6 rounded-full bg-white dark:bg-gray-800 border-2 border-indigo-100 dark:border-indigo-900 flex items-center justify-center text-[8px] font-bold text-indigo-600"
-                                      title={organ}
-                                    >
-                                      {organ[0]}
-                                    </div>
-                                  ))}
-                                  {donor.organsForDonation.length > 3 && (
-                                    <div className="w-6 h-6 rounded-full bg-indigo-600 border-2 border-indigo-100 flex items-center justify-center text-[8px] font-bold text-white">
-                                      +{donor.organsForDonation.length - 3}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </Card.Content>
-                        </Card>
-                      </motion.div>
+                      <div key={donor._id} className="p-4 bg-[#0c0f26]/90 border border-indigo-500/40 rounded-xl flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-indigo-950 border border-indigo-500/40 flex items-center justify-center text-indigo-300 font-bold">
+                            {donor.firstName[0]}
+                          </div>
+                          <div>
+                            <p className="font-bold text-gray-200">{donor.firstName} {donor.lastName}</p>
+                            <p className="text-xs text-gray-400">Reg: {new Date(donor.createdAt).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-1 bg-rose-950/60 border border-rose-500/40 text-rose-400 text-xs font-black rounded-lg">
+                            {donor.bloodGroup}
+                          </span>
+                          <span className="px-2.5 py-1 bg-indigo-950/60 border border-indigo-500/40 text-indigo-300 text-xs font-bold rounded-lg">
+                            {donor.organsForDonation?.join(', ')}
+                          </span>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Right Column: Activity */}
+            {/* Right Column: Activity Logs */}
             <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
-              <Card hover className="flex flex-col h-[600px]">
+              <h2 className="text-2xl font-extrabold text-amber-300 font-serif">Surgical Action Logs</h2>
+              <Card className="bg-[#0c0f26]/90 border-2 border-amber-400/40 backdrop-blur-xl shadow-[6px_6px_0px_0px_#E5C158] flex flex-col h-[520px]">
                 <Card.Content className="flex-1 overflow-y-auto custom-scrollbar p-0">
                   {activity.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center p-6">
-                      <Clock className="w-12 h-12 text-gray-300 mb-2" />
-                      <p className="text-gray-500 text-sm">No activity records found.</p>
+                      <Clock className="w-12 h-12 text-gray-600 mb-2" />
+                      <p className="text-gray-400 text-sm">No activity records logged.</p>
                     </div>
                   ) : (
-                    <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                    <div className="divide-y divide-gray-800">
                       {activity.map((item, idx) => (
                         <HistoryItem key={item._id} item={item} index={idx} />
                       ))}
@@ -589,28 +539,27 @@ const HospitalDashboard = () => {
                 </Card.Content>
               </Card>
 
-              {/* Quick Action Card */}
-              <Card className="bg-gradient-to-br from-primary-500 to-pink-500 text-white border-none shadow-xl">
-                <Card.Content className="p-6">
-                  <h4 className="font-bold mb-2">Need Urgent Help?</h4>
-                  <p className="text-sm opacity-90 mb-4">Contact our support line for critical organ search assistance.</p>
-                  <Button variant="outline" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
-                    Call 1800-DONOR
-                  </Button>
-                </Card.Content>
-              </Card>
+              {/* Quick Hotline Card */}
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-rose-950/80 via-amber-950/60 to-rose-950/80 border-2 border-rose-500/60 shadow-[4px_4px_0px_0px_#E63946] text-gray-100">
+                <div className="flex items-center gap-3 mb-2">
+                  <AlertCircle className="w-6 h-6 text-rose-400" />
+                  <h4 className="font-extrabold text-lg text-rose-300 font-serif">Critical Transport Dispatch</h4>
+                </div>
+                <p className="text-xs text-gray-300 mb-4 leading-relaxed">
+                  Direct helicopter corridor request and rapid organ preservation cold ischemia team support.
+                </p>
+                <Button className="w-full bg-rose-600 hover:bg-rose-500 text-white font-black shadow-[3px_3px_0px_0px_#000]">
+                  Call Emergency Dispatch (1800-DONOR)
+                </Button>
+              </div>
             </div>
           </div>
         )}
 
         {/* Modals */}
-        <Modal
-          isOpen={showProfileModal}
-          onClose={() => setShowProfileModal(false)}
-          size="2xl"
-        >
+        <Modal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} size="2xl">
           <Modal.Header>
-            <Modal.Title>{profile ? 'Update Hospital Profile' : 'Complete Hospital Profile'}</Modal.Title>
+            <Modal.Title className="text-amber-300 font-serif">{profile ? 'Update Hospital Center Profile' : 'Complete Hospital Registration'}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <HospitalProfileForm
@@ -621,13 +570,9 @@ const HospitalDashboard = () => {
           </Modal.Body>
         </Modal>
 
-        <Modal
-          isOpen={showRequestModal}
-          onClose={() => setShowRequestModal(false)}
-          size="xl"
-        >
+        <Modal isOpen={showRequestModal} onClose={() => setShowRequestModal(false)} size="xl">
           <Modal.Header>
-            <Modal.Title>Create New Organ Request</Modal.Title>
+            <Modal.Title className="text-amber-300 font-serif">Create Surgical Organ Request</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <HospitalRequestForm
@@ -637,13 +582,9 @@ const HospitalDashboard = () => {
           </Modal.Body>
         </Modal>
 
-        <Modal
-          isOpen={showPatientDonorModal}
-          onClose={() => setShowPatientDonorModal(false)}
-          size="2xl"
-        >
+        <Modal isOpen={showPatientDonorModal} onClose={() => setShowPatientDonorModal(false)} size="2xl">
           <Modal.Header>
-            <Modal.Title>Register Patient as Donor</Modal.Title>
+            <Modal.Title className="text-amber-300 font-serif">Register Patient Donor</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <HospitalPatientDonorForm
@@ -653,35 +594,24 @@ const HospitalDashboard = () => {
           </Modal.Body>
         </Modal>
 
-        <Modal
-          isOpen={showMatchModal}
-          onClose={() => setShowMatchModal(false)}
-          size="4xl"
-        >
+        <Modal isOpen={showMatchModal} onClose={() => setShowMatchModal(false)} size="4xl">
           <Modal.Header>
             <div className="flex justify-between items-center w-full pr-8">
               <div>
-                <Modal.Title>Match Results: {selectedRequest?.organType}</Modal.Title>
-                <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                  <span>🩸 {selectedRequest?.bloodGroup}</span>
+                <Modal.Title className="text-amber-300 font-serif">Crossmatch Matrix: {selectedRequest?.organType}</Modal.Title>
+                <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                  <span>🩸 Blood Group: {selectedRequest?.bloodGroup}</span>
                   <span>•</span>
-                  <span className="capitalize">{selectedRequest?.urgency} Urgency</span>
+                  <span className="capitalize text-amber-400 font-bold">{selectedRequest?.urgency} Urgency</span>
                 </div>
-              </div>
-              <div className="text-right">
-                <p className="text-xs text-gray-400">Request ID</p>
-                <p className="text-xs font-mono">{selectedRequest?._id}</p>
               </div>
             </div>
           </Modal.Header>
           <Modal.Body>
             {loadingMatches ? (
-              <div className="py-20 flex flex-col items-center justify-center">
-                <div className="relative w-16 h-16">
-                  <div className="absolute top-0 left-0 w-full h-full border-4 border-primary-200 rounded-full animate-pulse" />
-                  <div className="absolute top-0 left-0 w-full h-full border-t-4 border-primary-600 rounded-full animate-spin" />
-                </div>
-                <p className="mt-4 text-gray-600 animate-pulse font-medium">Running compatibility algorithm...</p>
+              <div className="py-16 flex flex-col items-center justify-center">
+                <Loader className="w-10 h-10 animate-spin text-amber-400 mb-3" />
+                <p className="text-amber-300 font-bold animate-pulse">Running compatibility algorithm...</p>
               </div>
             ) : (
               <MatchList 
@@ -701,7 +631,7 @@ const HospitalDashboard = () => {
             type="hospital"
             userData={{
               firstName: profile.hospitalName,
-              lastName: '', // Hospitals don't have last names
+              lastName: '',
               _id: user._id
             }}
             details={{ 
@@ -711,7 +641,7 @@ const HospitalDashboard = () => {
           />
         )}
 
-        {/* AI OCR Scanner Modal */}
+        {/* AI Scanner Modal */}
         <AIDonorHistoryModal
           isOpen={showAIScannerModal}
           onClose={() => setShowAIScannerModal(false)}
