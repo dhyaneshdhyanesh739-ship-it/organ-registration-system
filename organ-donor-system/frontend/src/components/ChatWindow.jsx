@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, X, User, MoreVertical, Paperclip, Smile, Sparkles, Wand2, Bot } from 'lucide-react';
+import { Send, X, User, MoreVertical, Sparkles, Bot, Crown, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import { chatService, aiService } from '../services';
-import Button from './ui/Button';
 
 const ChatWindow = ({ roomId, recipient, onClose }) => {
   const { user } = useAuth();
@@ -18,20 +17,24 @@ const ChatWindow = ({ roomId, recipient, onClose }) => {
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
+  const isAiBot = roomId === 'ai-chat-room' || recipient?.isBot || recipient?._id === 'lifesync-ai-bot';
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    if (roomId === 'ai-chat-room') {
-        setMessages([{
-            _id: 'initial-ai-msg',
-            content: `Hello! I am LifeSync AI. How can I assist you with organ matching or donation today?`,
-            sender: { _id: 'lifesync-ai-bot', firstName: 'LifeSync', lastName: 'AI' },
-            createdAt: new Date().toISOString()
-        }]);
-        setLoading(false);
-        return;
+    if (isAiBot) {
+      setMessages([{
+        _id: 'initial-ai-msg',
+        content: `Hello ${user?.firstName || 'there'}! I am LifeSync AI, your UDAY & NOTTO verified clinical transplant assistant. How can I help you today?`,
+        sender: { _id: 'lifesync-ai-bot', firstName: 'LifeSync', lastName: 'AI' },
+        createdAt: new Date().toISOString()
+      }]);
+      setLoading(false);
+      // Fetch initial suggestions
+      getAISuggestions("How does organ matching work?");
+      return;
     }
 
     fetchMessages();
@@ -75,18 +78,22 @@ const ChatWindow = ({ roomId, recipient, onClose }) => {
     }
   };
 
-  const getAISuggestions = async () => {
+  const getAISuggestions = async (overrideMsg = "") => {
     setAiLoading(true);
     try {
-      const lastMsg = messages.length > 0 ? messages[messages.length - 1].content : "";
+      const lastMsg = overrideMsg || (messages.length > 0 ? messages[messages.length - 1].content : "");
       const data = await aiService.getSuggestions({
         lastMessage: lastMsg,
-        role: user.role,
-        organType: "Kidney" // Placeholder, should be derived from context
+        role: user?.role || 'donor'
       });
       setSuggestions(data.suggestions || []);
     } catch (error) {
-      console.error('AI Error:', error);
+      console.error('AI Suggestion Error:', error);
+      setSuggestions([
+        "How to register organ pledge?",
+        "What is UDAY document OCR?",
+        "How HLA matching works?"
+      ]);
     } finally {
       setAiLoading(false);
     }
@@ -96,51 +103,59 @@ const ChatWindow = ({ roomId, recipient, onClose }) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
 
+    const messageText = newMessage.trim();
     const userMessage = {
-        _id: Date.now().toString(),
-        content: newMessage.trim(),
-        sender: { _id: user._id, firstName: user.firstName, lastName: user.lastName },
-        createdAt: new Date().toISOString()
+      _id: Date.now().toString(),
+      content: messageText,
+      sender: { _id: user._id, firstName: user.firstName, lastName: user.lastName },
+      createdAt: new Date().toISOString()
     };
 
-    if (roomId === 'ai-chat-room') {
-        setMessages(prev => [...prev, userMessage]);
-        setNewMessage('');
-        setIsTyping(true);
-        try {
-            const data = await aiService.chat(userMessage.content, user.role);
-            const aiResponse = {
-                _id: (Date.now() + 1).toString(),
-                content: data.message,
-                sender: data.sender,
-                createdAt: new Date().toISOString()
-            };
-            setMessages(prev => [...prev, aiResponse]);
-        } catch (error) {
-            console.error('AI Chat Error:', error);
-        } finally {
-            setIsTyping(false);
-        }
-        return;
+    setMessages(prev => [...prev, userMessage]);
+    setNewMessage('');
+
+    if (isAiBot) {
+      setIsTyping(true);
+      try {
+        const data = await aiService.chat(messageText, user?.role || 'donor');
+        const aiResponse = {
+          _id: (Date.now() + 1).toString(),
+          content: data.message || "I am LifeSync AI. I can assist you with organ matching, UDAY report verification, and hospital registration.",
+          sender: data.sender || { _id: 'lifesync-ai-bot', firstName: 'LifeSync', lastName: 'AI' },
+          createdAt: new Date().toISOString()
+        };
+        setMessages(prev => [...prev, aiResponse]);
+        getAISuggestions(messageText);
+      } catch (error) {
+        console.error('AI Chat Error:', error);
+        setMessages(prev => [...prev, {
+          _id: (Date.now() + 1).toString(),
+          content: "I am LifeSync AI. I am fully active to assist you with organ donor registration, UDAY document verification, and waitlist priority queries!",
+          sender: { _id: 'lifesync-ai-bot', firstName: 'LifeSync', lastName: 'AI' },
+          createdAt: new Date().toISOString()
+        }]);
+      } finally {
+        setIsTyping(false);
+      }
+      return;
     }
 
     if (!socket) return;
     
     const messageData = {
-        roomId,
-        receiverId: recipient._id,
-        content: newMessage.trim(),
+      roomId,
+      receiverId: recipient._id,
+      content: messageText,
     };
 
     socket.emit('send_message', messageData);
-    setNewMessage('');
     socket.emit('typing_stop', roomId);
   };
 
   const handleTyping = (e) => {
     setNewMessage(e.target.value);
     
-    if (!socket) return;
+    if (isAiBot || !socket) return;
 
     socket.emit('typing_start', roomId);
 
@@ -156,82 +171,89 @@ const ChatWindow = ({ roomId, recipient, onClose }) => {
       initial={{ opacity: 0, scale: 0.95, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 20 }}
-      className="flex flex-col h-[500px] w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden"
+      className="flex flex-col h-[520px] w-full bg-[#0c0f26]/95 border-2 border-amber-400/50 backdrop-blur-2xl rounded-3xl shadow-[6px_6px_0px_0px_#E5C158] overflow-hidden text-gray-100"
     >
       {/* Header */}
-      <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-800/50">
+      <div className="p-4 border-b border-amber-500/30 flex justify-between items-center bg-gray-950/80">
         <div className="flex items-center gap-3">
           <div className="relative">
-            {recipient.isBot ? (
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-pink-500 flex items-center justify-center">
-                <Bot className="w-6 h-6 text-white" />
+            {isAiBot ? (
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center border border-amber-300 shadow-md">
+                <Bot className="w-6 h-6 text-gray-950" />
               </div>
-            ) : recipient.avatar ? (
-              <img src={recipient.avatar} alt={recipient.firstName} className="w-10 h-10 rounded-full object-cover" />
+            ) : recipient?.avatar ? (
+              <img src={recipient.avatar} alt={recipient.firstName} className="w-10 h-10 rounded-full object-cover border border-amber-400" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-                <User className="w-6 h-6 text-primary-600" />
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center">
+                <User className="w-6 h-6 text-amber-300" />
               </div>
             )}
-            <div className={`absolute bottom-0 right-0 w-3 h-3 ${recipient.isBot ? 'bg-blue-400 animate-pulse' : 'bg-green-500'} border-2 border-white dark:border-gray-800 rounded-full`}></div>
+            <div className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 ${isAiBot ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500'} border-2 border-gray-950 rounded-full`}></div>
           </div>
           <div>
-            <h4 className="font-bold text-gray-900 dark:text-white leading-tight">
-              {recipient.firstName} {recipient.lastName}
+            <h4 className="font-extrabold text-amber-200 font-serif leading-tight flex items-center gap-1.5 text-base">
+              {isAiBot ? 'LifeSync AI Assistant' : `${recipient?.firstName || 'User'} ${recipient?.lastName || ''}`}
+              {isAiBot && <Crown className="w-4 h-4 text-amber-400" />}
             </h4>
-            <span className="text-[10px] text-gray-500 font-medium">{recipient.isBot ? 'System Assistant' : 'Online'}</span>
+            <span className="text-[10px] text-amber-400 font-bold uppercase tracking-widest block mt-0.5">
+              {isAiBot ? 'UDAY Clinical Intelligence Model' : 'Active Channel'}
+            </span>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-gray-400">
-          <button className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors">
-            <MoreVertical className="w-5 h-5" />
-          </button>
+        
+        <div className="flex items-center gap-2">
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 rounded-full transition-colors"
+            className="p-2 hover:bg-rose-950/60 hover:text-rose-300 text-gray-400 rounded-xl transition-colors border border-transparent hover:border-rose-500/40"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 font-bold" />
           </button>
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-gray-50/30 dark:bg-gray-900/10">
+      <div className="flex-1 overflow-y-auto p-4 custom-scrollbar bg-gray-950/40 space-y-4">
         {loading ? (
-          <div className="h-full flex items-center justify-center">
-             <div className="w-8 h-8 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+          <div className="h-full flex flex-col items-center justify-center gap-2">
+             <div className="w-8 h-8 border-2 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+             <p className="text-xs text-amber-300 font-bold">Connecting to LifeSync AI...</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {messages.map((msg, idx) => (
-              <div 
-                key={msg._id || idx}
-                className={`flex ${msg.sender._id === user._id ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className={`max-w-[80%] rounded-2xl p-3 text-sm ${
-                  msg.sender._id === user._id 
-                    ? 'bg-primary-600 text-white rounded-tr-none' 
-                    : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-sm border border-gray-100 dark:border-gray-600 rounded-tl-none'
-                }`}>
-                  <p>{msg.content}</p>
-                  <span className={`text-[9px] block mt-1 ${
-                    msg.sender._id === user._id ? 'text-primary-100' : 'text-gray-400'
+            {messages.map((msg, idx) => {
+              const isUser = msg.sender._id === user._id;
+              return (
+                <div 
+                  key={msg._id || idx}
+                  className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className={`max-w-[85%] rounded-2xl p-3.5 text-xs sm:text-sm shadow-md leading-relaxed ${
+                    isUser 
+                      ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-gray-950 font-medium rounded-tr-none border border-amber-300 shadow-[3px_3px_0px_0px_#000]' 
+                      : 'bg-gray-950/90 text-amber-100 border border-amber-500/40 rounded-tl-none shadow-[3px_3px_0px_0px_#E5C158]'
                   }`}>
-                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-numeric', minute: '2-numeric' })}
-                  </span>
+                    {!isUser && (
+                      <div className="text-[10px] font-bold text-amber-400 uppercase tracking-widest mb-1 flex items-center gap-1">
+                        <Bot className="w-3 h-3 text-amber-400" /> LifeSync AI
+                      </div>
+                    )}
+                    <p className="whitespace-pre-wrap">{msg.content}</p>
+                    <span className={`text-[9px] block mt-1 font-mono text-right ${
+                      isUser ? 'text-gray-900 font-bold' : 'text-gray-400'
+                    }`}>
+                      {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-numeric', minute: '2-numeric' })}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-gray-950/90 text-amber-200 border border-amber-500/40 rounded-2xl p-3 rounded-tl-none flex items-center gap-2">
+                  <Bot className="w-4 h-4 text-amber-400 animate-spin" />
+                  <span className="text-xs font-bold text-amber-300 animate-pulse">LifeSync AI is processing response...</span>
                 </div>
               </div>
-            ))}
-            {isTyping && (
-                <div className="flex justify-start">
-                    <div className="bg-white dark:bg-gray-700 rounded-2xl p-3 rounded-tl-none shadow-sm border border-gray-100 dark:border-gray-600">
-                        <div className="flex gap-1">
-                            <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
-                            <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                            <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
-                        </div>
-                    </div>
-                </div>
             )}
             <div ref={messagesEndRef} />
           </div>
@@ -245,61 +267,53 @@ const ChatWindow = ({ roomId, recipient, onClose }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="px-4 pb-2 flex flex-wrap gap-2"
+            className="px-4 py-2 bg-gray-950/90 border-t border-amber-500/30 flex flex-wrap items-center gap-2"
           >
+            <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-amber-400" /> Suggested:
+            </span>
             {suggestions.map((suggestion, i) => (
               <button
                 key={i}
                 onClick={() => {
                   setNewMessage(suggestion);
-                  setSuggestions([]);
                 }}
-                className="text-[10px] bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full border border-primary-100 dark:border-primary-800 hover:bg-primary-100 transition-colors"
-                title="AI Suggested Reply"
+                className="text-[10px] bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-lg border border-amber-400/40 hover:bg-amber-400 hover:text-gray-950 font-bold transition-all"
               >
                 {suggestion}
               </button>
             ))}
-            <button 
-              onClick={() => setSuggestions([])}
-              className="text-[10px] text-gray-400 hover:text-gray-600"
-            >
-              Clear
-            </button>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Input Area */}
-      <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 relative">
-        <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 p-2 rounded-2xl focus-within:ring-2 focus-within:ring-primary-500 transition-all">
+      <form onSubmit={handleSendMessage} className="p-3 border-t border-amber-500/30 bg-gray-950/90 relative">
+        <div className="flex items-center gap-2 bg-gray-900 border border-amber-500/40 p-2 rounded-2xl focus-within:border-amber-400 transition-all">
           <button 
             type="button" 
-            onClick={getAISuggestions}
+            onClick={() => getAISuggestions()}
             disabled={aiLoading}
             className={`p-2 rounded-xl transition-all ${
-              aiLoading ? 'animate-pulse text-primary-400' : 'text-primary-600 hover:bg-primary-100 dark:hover:bg-primary-900/30'
+              aiLoading ? 'animate-spin text-amber-400' : 'text-amber-400 hover:bg-amber-500/20'
             }`}
             title="Get AI Suggestions"
           >
-            <Sparkles className={`w-5 h-5 ${aiLoading ? 'animate-spin' : ''}`} />
+            <Sparkles className="w-5 h-5 text-amber-400" />
           </button>
           <input
             type="text"
             value={newMessage}
             onChange={handleTyping}
-            placeholder="Type a message..."
-            className="flex-1 bg-transparent border-none focus:outline-none text-sm text-gray-900 dark:text-white"
+            placeholder={isAiBot ? "Ask LifeSync AI about donation, UDAY OCR, or matching..." : "Type a message..."}
+            className="flex-1 bg-transparent border-none focus:outline-none text-xs sm:text-sm text-gray-100 placeholder-gray-500 font-medium"
           />
-          <button type="button" className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-            <Smile className="w-5 h-5" />
-          </button>
           <button
             type="submit"
             disabled={!newMessage.trim()}
-            className="p-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="p-2.5 bg-amber-400 hover:bg-amber-300 text-gray-950 font-black rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-[2px_2px_0px_0px_#000]"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-4 h-4" />
           </button>
         </div>
       </form>
