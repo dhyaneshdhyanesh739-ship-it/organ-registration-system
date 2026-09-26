@@ -143,49 +143,49 @@ const OrganCard = ({ organ, index, onClick, onPledge }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      transition={{ delay: index * 0.1 }}
+      transition={{ delay: index * 0.06 }}
       onClick={onClick}
-      className="bg-gray-800/50 backdrop-blur-md rounded-2xl overflow-hidden shadow-xl border border-white/5 group hover:border-primary-500/50 transition-all cursor-pointer flex flex-col h-full"
+      className="bg-[#0e122b]/95 backdrop-blur-xl border-2 border-amber-400/30 rounded-2xl overflow-hidden shadow-brutal-gold hover:shadow-[7px_7px_0px_0px_#E5C158] hover:border-amber-300 transition-all cursor-pointer flex flex-col h-full group min-w-0"
     >
-      <div className="h-44 relative overflow-hidden bg-gray-900/50 p-6 flex items-center justify-center">
-        <div className={`absolute inset-0 bg-gradient-to-br ${organ.color} opacity-5 group-hover:opacity-10 transition-opacity`} />
+      <div className="h-44 relative overflow-hidden bg-[#080a17]/90 p-4 flex items-center justify-center border-b border-amber-400/20">
+        <div className={`absolute inset-0 bg-gradient-to-br ${organ.color} opacity-10 group-hover:opacity-20 transition-opacity`} />
         
-        <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-bold text-white bg-gradient-to-r ${organ.color} shadow-lg z-10`}>
+        <div className="absolute top-3 right-3 px-3 py-1 rounded-full text-[11px] uppercase tracking-wider font-extrabold text-amber-200 bg-amber-400/25 border border-amber-400/40 shadow-sm z-10 whitespace-nowrap max-w-[85%] truncate">
           {organ.badge}
         </div>
 
         <motion.img
           src={organ.image}
           alt={organ.name}
-          className="w-auto h-full max-h-32 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] z-0 transform group-hover:scale-110 transition-transform duration-700"
+          className="w-auto h-32 max-w-[80%] object-contain drop-shadow-[0_10px_25px_rgba(229,193,88,0.3)] z-0 transform group-hover:scale-110 transition-transform duration-500"
         />
       </div>
 
-      <div className="p-5 flex-1 flex flex-col">
-        <div className="flex items-center gap-2 mb-2">
-          <div className={`p-1.5 rounded-lg bg-gradient-to-br ${organ.color} bg-opacity-10`}>
-            <organ.icon className="w-4 h-4 text-white" />
+      <div className="p-5 flex-1 flex flex-col space-y-3 bg-[#0d1025]/90">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-amber-400/20 border border-amber-400/40 shrink-0">
+            <organ.icon className="w-4 h-4 text-amber-300" />
           </div>
-          <h3 className="text-lg font-bold text-white group-hover:text-primary-400 transition-colors">
+          <h3 className="text-xl font-black text-white font-sans group-hover:text-amber-300 transition-colors truncate">
             {organ.name}
           </h3>
         </div>
-        <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-2">
+        <p className="text-slate-300 text-xs font-medium leading-relaxed line-clamp-2">
           {organ.description}
         </p>
-        <div className="mt-auto flex items-center justify-between">
+        <div className="mt-auto pt-3 border-t border-amber-400/10 flex items-center justify-between gap-3">
           <button 
             onClick={(e) => {
               e.stopPropagation();
               onPledge(organ.name);
             }}
-            className="text-xs font-bold text-white px-3 py-1.5 rounded-lg bg-gradient-to-r from-primary-600 to-pink-600 hover:shadow-lg transition-all opacity-0 group-hover:opacity-100"
+            className="btn-primary text-xs px-4 py-2 uppercase tracking-wider font-black whitespace-nowrap shrink-0"
           >
             Pledge Now
           </button>
-          <div className="flex items-center gap-1 text-xs font-medium text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity">
-            <span>Learn More</span>
-            <TrendingUp className="w-3 h-3" />
+          <div className="flex items-center gap-1.5 text-xs font-extrabold text-amber-300 group-hover:underline whitespace-nowrap shrink-0">
+            <span>Details</span>
+            <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
           </div>
         </div>
       </div>
@@ -196,86 +196,86 @@ const OrganCard = ({ organ, index, onClick, onPledge }) => {
 const OrganDetailView = ({ organ, onBack, onPledge }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 50 }}
+      initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -50 }}
-      className="flex flex-col h-full flex-1 overflow-hidden"
+      exit={{ opacity: 0, x: -40 }}
+      className="flex flex-col h-full flex-1 overflow-hidden bg-[#0c0f24]/95 text-slate-100"
     >
-      <div className="p-6 border-b border-gray-800 flex items-center gap-4 bg-gray-900/50 backdrop-blur-md sticky top-0 z-20">
+      <div className="p-6 border-b-2 border-amber-400/30 flex items-center gap-4 bg-[#090b17]/90 backdrop-blur-xl sticky top-0 z-20">
         <button
           onClick={onBack}
-          className="p-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-white transition-all flex items-center gap-2 pr-4 group"
+          className="btn-secondary px-4 py-2 text-xs flex items-center gap-2"
         >
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span className="text-sm font-semibold">Back to All</span>
+          <ArrowLeft className="w-4 h-4 text-amber-300" />
+          <span>Back to Registry</span>
         </button>
-        <div className="h-8 w-px bg-gray-800" />
-        <h2 className={`text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${organ.color}`}>
-          {organ.name} Details
+        <div className="h-6 w-0.5 bg-amber-400/30" />
+        <h2 className="text-2xl font-black royal-title">
+          {organ.name} Registry Details
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10">
-        <div className="grid lg:grid-cols-12 gap-10 items-start">
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10 space-y-8">
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Image & Badge */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="relative aspect-square rounded-3xl bg-gray-800/50 border border-white/5 flex items-center justify-center p-12 overflow-hidden overflow-hidden">
+          <div className="lg:col-span-5 space-y-4">
+            <div className="relative aspect-square rounded-3xl bg-[#090b17]/90 border-2 border-amber-400/40 shadow-royal-glass flex items-center justify-center p-8 overflow-hidden">
               <div className={`absolute inset-0 bg-gradient-to-br ${organ.color} opacity-10`} />
               <motion.img
-                initial={{ scale: 0.8, rotate: -5 }}
+                initial={{ scale: 0.8, rotate: -3 }}
                 animate={{ scale: 1, rotate: 0 }}
                 src={organ.image}
                 alt={organ.name}
-                className="w-full h-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)] z-10"
+                className="w-full h-full object-contain drop-shadow-[0_15px_35px_rgba(229,193,88,0.5)] z-10"
               />
             </div>
             
-            <div className={`p-4 rounded-2xl bg-gradient-to-r ${organ.color} text-white text-center font-bold shadow-xl shadow-primary-500/10`}>
+            <div className="p-4 rounded-2xl bg-amber-400/20 border-2 border-amber-400/50 text-amber-200 text-center font-black uppercase tracking-wider text-xs shadow-lg">
               {organ.badge}
             </div>
           </div>
 
           {/* Right Column: Info & Stats */}
-          <div className="lg:col-span-7 space-y-8">
-            <div className="space-y-4">
-              <h3 className="text-3xl font-bold text-white">Understanding the {organ.name}</h3>
-              <p className="text-gray-300 text-lg leading-relaxed italic">
+          <div className="lg:col-span-7 space-y-6">
+            <div className="space-y-3">
+              <h3 className="text-3xl font-black text-white font-sans">Understanding the {organ.name}</h3>
+              <p className="text-amber-200/90 text-base leading-relaxed italic font-medium">
                 "{organ.description}"
               </p>
-              <p className="text-gray-400 text-base leading-relaxed">
+              <p className="text-slate-300 text-sm leading-relaxed font-medium">
                 {organ.details}
               </p>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-4">
               {organ.stats.map((stat, idx) => (
-                <div key={idx} className="p-4 rounded-2xl bg-gray-800/50 border border-white/5 space-y-2">
-                  <stat.icon className="w-5 h-5 text-primary-400" />
-                  <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">{stat.label}</p>
-                  <p className="text-xl font-bold text-white">{stat.value}</p>
+                <div key={idx} className="p-4 rounded-2xl bg-[#090b17]/80 border-2 border-amber-400/30 space-y-1">
+                  <stat.icon className="w-5 h-5 text-amber-300" />
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{stat.label}</p>
+                  <p className="text-lg font-black text-white">{stat.value}</p>
                 </div>
               ))}
             </div>
 
-            <div className="p-6 rounded-2xl bg-primary-500/5 border border-primary-500/10 space-y-4">
-              <h4 className="font-bold text-white flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+            <div className="p-5 rounded-2xl bg-amber-400/10 border-2 border-amber-400/30 space-y-2">
+              <h4 className="font-extrabold text-amber-200 flex items-center gap-2 text-sm uppercase tracking-wide">
+                <CheckCircle className="w-4 h-4 text-emerald-400" />
                 Impact of Donation
               </h4>
-              <p className="text-sm text-gray-400">
-                Pledging a {organ.name} can provide hope to patients who have been on the waiting list for years. Each donation is a legacy of life that transcends generations.
+              <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                Pledging a {organ.name} provides hope to waitlist patients in critical medical priority. Each donation is an eternal legacy.
               </p>
             </div>
           </div>
         </div>
       </div>
       
-      <div className="p-6 border-t border-gray-800 bg-gray-900/50 backdrop-blur-md sticky bottom-0">
+      <div className="p-6 border-t-2 border-amber-400/30 bg-[#090b17]/90 backdrop-blur-xl sticky bottom-0">
         <button 
           onClick={() => onPledge(organ.name)}
-          className="w-full py-4 bg-gradient-to-r from-primary-600 to-pink-600 rounded-2xl text-white font-bold text-lg hover:shadow-2xl hover:shadow-primary-500/20 transition-all transform hover:-translate-y-1 active:scale-95"
+          className="btn-primary w-full py-4 text-base tracking-widest font-black"
         >
-          Pledge to Donate
+          <span>Pledge to Donate {organ.name}</span>
         </button>
       </div>
     </motion.div>
@@ -291,16 +291,13 @@ const OrganShowcase = ({ isOpen, onClose }) => {
     if (!user) {
       navigate('/login', { state: { from: '/', selectedOrgan: organName } });
     } else if (user.role === 'donor') {
-      // If donor, go to profile (create or edit)
       navigate('/donor/profile/create', { state: { selectedOrgan: organName } });
     } else {
-      // For hospital/admin, maybe just a toast or ignore
       alert('Only donors can pledge to donate organs.');
     }
     onClose();
   };
 
-  // Lock body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -312,7 +309,6 @@ const OrganShowcase = ({ isOpen, onClose }) => {
     };
   }, [isOpen]);
 
-  // Reset selection when closing modal
   useEffect(() => {
     if (!isOpen) {
       setTimeout(() => setSelectedOrgan(null), 300);
@@ -329,15 +325,15 @@ const OrganShowcase = ({ isOpen, onClose }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/80 backdrop-blur-xl"
+            className="absolute inset-0 bg-black/85 backdrop-blur-2xl"
           />
 
           {/* Modal Content */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative w-full max-w-6xl max-h-[90vh] bg-gray-900/90 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col border border-white/10"
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative w-full max-w-7xl max-h-[92vh] bg-[#0c0f24]/95 backdrop-blur-2xl rounded-[2rem] shadow-royal-glass overflow-hidden flex flex-col border-2 border-amber-400/40 z-10"
           >
             <AnimatePresence mode="wait">
               {selectedOrgan ? (
@@ -356,26 +352,26 @@ const OrganShowcase = ({ isOpen, onClose }) => {
                   className="flex flex-col h-full flex-1 overflow-hidden"
                 >
                   {/* Header */}
-                  <div className="p-8 border-b border-white/5 flex items-center justify-between bg-gray-900/50 backdrop-blur-md z-10 sticky top-0">
+                  <div className="p-6 md:p-8 border-b-2 border-amber-400/30 flex items-center justify-between bg-[#090b17]/90 backdrop-blur-xl z-10 sticky top-0">
                     <div>
-                      <h2 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+                      <h2 className="text-3xl md:text-4xl font-black royal-title tracking-wide">
                         The Legacy of Life
                       </h2>
-                      <p className="text-gray-400 text-base mt-2">
+                      <p className="text-slate-300 text-sm font-medium mt-1">
                         Explore how your pledge can save up to 8 precious lives
                       </p>
                     </div>
                     <button
                       onClick={onClose}
-                      className="p-3 rounded-2xl bg-gray-800 hover:bg-gray-700 text-white transition-all transform hover:rotate-90"
+                      className="p-3 rounded-2xl bg-amber-400/10 border-2 border-amber-400/40 text-amber-300 hover:bg-amber-400/25 hover:border-amber-300 transition-all transform hover:rotate-90"
                     >
                       <X className="w-6 h-6" />
                     </button>
                   </div>
 
                   {/* Grid Content */}
-                  <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {organs.map((organ, index) => (
                         <OrganCard 
                           key={organ.id} 
