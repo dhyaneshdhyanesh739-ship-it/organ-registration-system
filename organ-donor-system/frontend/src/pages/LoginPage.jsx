@@ -231,44 +231,47 @@ const LoginPage = () => {
         </div>
 
         {/* Right Side: Login Form */}
-        <div className="md:w-1/2 p-8 md:p-12 lg:p-14 flex flex-col justify-center text-white relative bg-[#0b0e24]/90">
+        <div className="md:w-1/2 p-8 md:p-12 lg:p-14 flex flex-col justify-center text-white relative bg-[#0b0e28]/95 backdrop-blur-2xl">
           {/* Close Button */}
-          <Link to="/" className="absolute top-6 right-6 p-2 rounded-xl hover:bg-amber-400/10 text-amber-300/70 hover:text-amber-300 transition-all border border-amber-400/20">
+          <Link to="/" className="absolute top-6 right-6 p-2 rounded-xl hover:bg-amber-400/20 text-amber-300 hover:text-amber-200 transition-all border-2 border-amber-400/40 shadow-[3px_3px_0px_0px_#E5C158] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </Link>
 
-          <div className="mb-8 space-y-2">
+          <div className="mb-8 space-y-3">
+            <div className="royal-badge inline-flex items-center gap-1.5">
+              <span>👑 ROYAL HERO ACCESS</span>
+            </div>
             <h1 className="text-3xl md:text-4xl font-black royal-title">Royal Access</h1>
-            <p className="text-slate-300 text-sm font-medium">Sign in to your LifePulse Organ Registry Account</p>
+            <p className="text-slate-300 text-sm font-semibold">Sign in to your LifePulse Organ Registry Account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-white transition-colors" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400/80 group-focus-within:text-amber-300 transition-colors" />
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full bg-[#2a2d45] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all font-medium"
-                  placeholder="Email Address"
+                  className="input-field pl-12"
+                  placeholder="Royal Email Address"
                 />
               </div>
               {formData.email && (
-                <div className={`text-sm pl-2 font-medium flex items-center gap-2 ${
-                  emailStatus.state === 'valid' ? 'text-green-500' : 
-                  emailStatus.state === 'invalid' ? 'text-red-500' : 
-                  'text-yellow-500'
+                <div className={`text-sm pl-2 font-bold flex items-center gap-2 ${
+                  emailStatus.state === 'valid' ? 'text-emerald-400' : 
+                  emailStatus.state === 'invalid' ? 'text-rose-400' : 
+                  'text-amber-300'
                 }`}>
-                  {emailStatus.state === 'checking' && <Loader className="w-3 h-3 animate-spin" />}
+                  {emailStatus.state === 'checking' && <Loader className="w-3 h-3 animate-spin text-amber-400" />}
                   {emailStatus.message || (
                     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-                      ? 'Your Mail ID is Valid'
-                      : 'Your Mail ID is Not Valid!!!Please Enter The Correct Mail ID'
+                      ? '✓ Your Mail ID is Valid'
+                      : '✕ Your Mail ID is Not Valid!!! Please Enter The Correct Mail ID'
                   )}
                 </div>
               )}
@@ -276,20 +279,20 @@ const LoginPage = () => {
 
             <div className="space-y-2">
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 group-focus-within:text-white transition-colors" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-400/80 group-focus-within:text-amber-300 transition-colors" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="w-full bg-[#2a2d45] border border-white/10 rounded-xl py-4 pl-12 pr-12 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500/50 transition-all font-medium"
-                  placeholder="Password"
+                  className="input-field pl-12 pr-12"
+                  placeholder="Security Password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-amber-400/70 hover:text-amber-300 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -298,10 +301,10 @@ const LoginPage = () => {
 
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 cursor-pointer group">
-                <input type="checkbox" className="w-4 h-4 rounded border-white/10 bg-[#2a2d45] text-green-500 focus:ring-0 focus:ring-offset-0 transition-all" />
-                <span className="text-gray-400 group-hover:text-white transition-colors">Remember Me</span>
+                <input type="checkbox" className="w-4 h-4 rounded border-2 border-amber-400/50 bg-[#070914] text-amber-400 focus:ring-0 focus:ring-offset-0 transition-all cursor-pointer" />
+                <span className="text-slate-300 group-hover:text-amber-300 font-semibold transition-colors">Remember Me</span>
               </label>
-              <Link to="/forgot-password" size="sm" className="text-gray-400 hover:text-white transition-colors">
+              <Link to="/forgot-password" className="text-amber-300/80 hover:text-amber-200 font-bold transition-colors hover:underline">
                 Forgot Password?
               </Link>
             </div>
@@ -309,24 +312,24 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-bold py-4 rounded-xl shadow-lg shadow-green-900/40 transform hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2"
+              className="btn-primary w-full py-4 text-base"
             >
               {loading ? (
                 <>
-                  <Loader className="w-5 h-5 animate-spin" />
-                  Logging in...
+                  <Loader className="w-5 h-5 animate-spin text-slate-950" />
+                  Authenticating...
                 </>
               ) : (
-                'Login'
+                'Sign In To Registry'
               )}
             </button>
 
             <div className="relative py-4">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/5"></div>
+                <div className="w-full border-t-2 border-amber-400/30"></div>
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-[#1a1c2e] px-4 text-gray-500">Or continue with</span>
+              <div className="relative flex justify-center text-xs uppercase font-black">
+                <span className="bg-[#0b0e28] px-4 text-amber-300/90 tracking-widest">Or Continue With</span>
               </div>
             </div>
 
@@ -335,7 +338,7 @@ const LoginPage = () => {
                 type="button"
                 onClick={() => signInWithGoogle()}
                 disabled={loading}
-                className="flex items-center justify-center gap-3 w-full bg-white hover:bg-gray-100 text-gray-800 font-semibold py-3 px-4 rounded-xl border border-gray-200 transition-all shadow-sm disabled:opacity-50"
+                className="flex items-center justify-center gap-3 w-full bg-[#121636] hover:bg-[#1a1f48] text-white font-extrabold py-3.5 px-4 rounded-xl border-2 border-amber-400/50 transition-all shadow-[5px_5px_0px_0px_#E5C158] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none cursor-pointer"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -355,10 +358,10 @@ const LoginPage = () => {
             </div>
           </form>
 
-          <p className="mt-10 text-center text-gray-400">
-            New to Organ Donation?{' '}
-            <Link to="/register" className="text-green-500 hover:text-green-400 font-bold ml-1 transition-colors">
-              Register Now
+          <p className="mt-10 text-center text-slate-400 font-medium text-sm">
+            New to Royal Organ Donation?{' '}
+            <Link to="/register" className="text-amber-300 hover:text-amber-200 font-black ml-1 transition-colors hover:underline">
+              Register As Hero
             </Link>
           </p>
         </div>

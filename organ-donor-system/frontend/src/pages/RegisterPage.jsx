@@ -309,8 +309,11 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f172a] p-4 font-['Inter']">
-      <div className="w-full max-w-6xl flex flex-col md:flex-row bg-[#1e293b]/40 backdrop-blur-2xl rounded-[32px] overflow-hidden border border-white/10 shadow-2xl relative">
+    <div className="min-h-screen flex items-center justify-center bg-[#070914] p-4 relative overflow-hidden">
+      {/* Ambient Radial Orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-rose-600/15 rounded-full blur-[140px] pointer-events-none" />
+      <div className="w-full max-w-6xl flex flex-col md:flex-row bg-[#0c0f26]/90 backdrop-blur-2xl rounded-[2.5rem] overflow-hidden border-2 border-amber-400/50 shadow-[8px_8px_0px_0px_#E5C158] relative z-10">
         <Link to="/" className="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors">
           <X className="w-6 h-6" />
         </Link>

@@ -130,31 +130,35 @@ const OrgansPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
+    <div className="min-h-screen bg-[#070914] text-slate-100 pb-20 relative selection:bg-amber-400/30 selection:text-amber-200">
       {/* Header */}
-      <section className="bg-gradient-to-r from-primary-600 to-pink-600 py-20 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="bg-[#0b0e26] border-b-4 border-amber-400 py-20 text-white relative overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
+          <div className="royal-badge inline-flex items-center gap-2">
+            <Heart className="w-4 h-4 text-rose-400" fill="#f43f5e" />
+            <span>👑 THE ROYAL GIFT OF LIFE</span>
+          </div>
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-bold mb-6"
+            className="text-4xl md:text-6xl font-black royal-title"
           >
-            The Gift of Life: Organs & Tissues
+            Sacred Organs & Tissue Registry
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl opacity-90 max-w-3xl mx-auto"
+            className="text-lg md:text-xl text-slate-300 font-semibold max-w-3xl mx-auto leading-relaxed"
           >
-            One single donor can save up to 8 lives and enhance the lives of over 75 others. 
-            Explore the incredible impact of organ donation.
+            One single noble donor can save up to 8 lives and restore vitality to over 75 others. 
+            Explore the royal impact of life pledge registry.
           </motion.p>
         </div>
       </section>
 
       {/* Gallery Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {organs.map((organ, index) => (
             <motion.div
@@ -164,46 +168,46 @@ const OrgansPage = () => {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               onClick={() => setSelectedOrgan(organ)}
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 cursor-pointer"
+              className="glass-card border-2 border-amber-400/50 shadow-[6px_6px_0px_0px_#E5C158] hover:shadow-[9px_9px_0px_0px_#E5C158] hover:-translate-x-1 hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
             >
               {/* Image Container */}
-              <div className="h-64 relative overflow-hidden bg-gray-100 dark:bg-gray-700 p-8 flex items-center justify-center">
+              <div className="h-64 relative overflow-hidden bg-[#080a1c] p-8 flex items-center justify-center border-b-2 border-amber-400/30">
                 <img
                   src={organ.image}
                   alt={organ.name}
-                  className="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500 drop-shadow-2xl"
+                  className="max-h-full max-w-full object-contain transform group-hover:scale-110 transition-transform duration-500 filter drop-shadow-[0_10px_20px_rgba(229,193,88,0.3)]"
                 />
-                <div className="absolute top-4 right-4 bg-primary-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                <div className="absolute top-4 right-4 royal-badge shadow-[2px_2px_0px_0px_#000000]">
                   {organ.impact}
                 </div>
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                  <span className="text-white font-bold px-4 py-2 rounded-xl border border-white/50">View Details</span>
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                  <span className="btn-primary text-xs !py-2.5">Inspect Details</span>
                 </div>
               </div>
 
               {/* Content */}
               <div className="p-6 space-y-4">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-2xl font-bold gradient-text">{organ.name}</h3>
+                  <h3 className="text-2xl font-black royal-title">{organ.name}</h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-2">
+                <p className="text-slate-300 text-sm font-medium leading-relaxed line-clamp-2">
                   {organ.description}
                 </p>
 
-                <div className="space-y-2 py-2 border-t border-gray-100 dark:border-gray-700 pt-4">
-                  <h4 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <Info className="w-4 h-4 text-primary-500" />
-                    Quick Facts
+                <div className="space-y-2 py-2 border-t-2 border-amber-400/20 pt-4">
+                  <h4 className="text-xs font-black uppercase text-amber-300 flex items-center gap-2 tracking-wider">
+                    <Info className="w-4 h-4 text-amber-400" />
+                    Royal Registry Facts
                   </h4>
                   {organ.facts.slice(0, 2).map((fact, idx) => (
-                    <div key={idx} className="flex gap-2 text-xs text-gray-500 dark:text-gray-400">
-                      <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" />
+                    <div key={idx} className="flex gap-2 text-xs font-medium text-slate-300">
+                      <CheckCircle className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
                       <span>{fact}</span>
                     </div>
                   ))}
-                  <div className="flex items-center gap-1 text-xs font-medium text-primary-500 pt-1">
-                    <span>Click for more details & waiting times</span>
-                    <TrendingUp className="w-3 h-3" />
+                  <div className="flex items-center gap-1 text-xs font-bold text-amber-300 pt-1">
+                    <span>Inspect full details & waitlists</span>
+                    <TrendingUp className="w-3.5 h-3.5" />
                   </div>
                 </div>
               </div>
@@ -221,90 +225,90 @@ const OrgansPage = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedOrgan(null)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+              className="absolute inset-0 bg-black/85 backdrop-blur-xl"
             />
             
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-4xl bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-white/10"
+              className="relative w-full max-w-4xl bg-[#0c0f26]/95 backdrop-blur-2xl rounded-[2.5rem] shadow-[10px_10px_0px_0px_#E5C158] overflow-hidden flex flex-col max-h-[90vh] border-2 border-amber-400"
             >
               {/* Modal Header */}
-              <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between sticky top-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md z-10">
+              <div className="p-6 border-b-2 border-amber-400/40 flex items-center justify-between sticky top-0 bg-[#0c0f26]/90 backdrop-blur-md z-10">
                 <div className="flex items-center gap-4">
-                  <div className={`p-3 rounded-2xl bg-gradient-to-br ${selectedOrgan.color} text-white`}>
-                    <Heart className="w-6 h-6" />
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 font-bold border-2 border-amber-200 shadow-[3px_3px_0px_0px_#000000]">
+                    <Heart className="w-6 h-6 fill-slate-950" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold dark:text-white">{selectedOrgan.name}</h2>
-                    <p className="text-sm text-gray-500">{selectedOrgan.impact}</p>
+                    <h2 className="text-2xl font-black royal-title">{selectedOrgan.name}</h2>
+                    <p className="text-xs font-bold text-amber-300 uppercase tracking-widest">{selectedOrgan.impact}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedOrgan(null)}
-                  className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-all transform hover:rotate-90"
+                  className="p-2 rounded-xl bg-amber-400/10 border-2 border-amber-400/40 text-amber-300 hover:text-white transition-all shadow-[3px_3px_0px_0px_#E5C158] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
 
               {/* Modal Body */}
-              <div className="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto p-6 md:p-10 custom-scrollbar space-y-6">
                 <div className="grid md:grid-cols-2 gap-10">
                   <div className="space-y-6">
-                    <div className="relative aspect-square rounded-3xl bg-gray-100 dark:bg-gray-800 p-8 flex items-center justify-center overflow-hidden">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${selectedOrgan.color} opacity-10 animate-pulse`} />
+                    <div className="relative aspect-square rounded-3xl bg-[#070918] p-8 flex items-center justify-center overflow-hidden border-2 border-amber-400/30">
+                      <div className={`absolute inset-0 bg-gradient-to-br ${selectedOrgan.color} opacity-15 animate-pulse`} />
                       <motion.img
                         initial={{ scale: 0.8 }}
                         animate={{ scale: 1 }}
                         src={selectedOrgan.image}
                         alt={selectedOrgan.name}
-                        className="w-full h-full object-contain drop-shadow-2xl relative z-10"
+                        className="w-full h-full object-contain drop-shadow-[0_10px_25px_rgba(229,193,88,0.4)] relative z-10"
                       />
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-                        <div className="flex items-center gap-2 mb-2 text-primary-500">
+                      <div className="p-4 rounded-2xl bg-[#0e122e] border-2 border-amber-400/40 shadow-[4px_4px_0px_0px_#E5C158]">
+                        <div className="flex items-center gap-2 mb-2 text-amber-300">
                           <Clock className="w-4 h-4" />
-                          <span className="text-[10px] font-bold uppercase tracking-wider">Avg. Wait Period</span>
+                          <span className="text-[10px] font-black uppercase tracking-wider">Avg Wait Period</span>
                         </div>
-                        <p className="text-xl font-black dark:text-white">{selectedOrgan.waitingPeriod}</p>
+                        <p className="text-xl font-black royal-title">{selectedOrgan.waitingPeriod}</p>
                       </div>
-                      <div className="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-                        <div className="flex items-center gap-2 mb-2 text-pink-500">
+                      <div className="p-4 rounded-2xl bg-[#0e122e] border-2 border-rose-500/40 shadow-[4px_4px_0px_0px_#E63946]">
+                        <div className="flex items-center gap-2 mb-2 text-rose-400">
                           <Zap className="w-4 h-4" />
-                          <span className="text-[10px] font-bold uppercase tracking-wider">Priority Level</span>
+                          <span className="text-[10px] font-black uppercase tracking-wider">Priority Level</span>
                         </div>
-                        <p className="text-xl font-black dark:text-white">High</p>
+                        <p className="text-xl font-black text-rose-300">Imperial Priority</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-8">
                     <div className="space-y-4">
-                      <h3 className="text-xl font-bold dark:text-white">Why it Matters</h3>
-                      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                      <h3 className="text-xl font-black text-white">Why It Matters</h3>
+                      <p className="text-slate-300 font-medium leading-relaxed">
                         {selectedOrgan.fullDetails}
                       </p>
                     </div>
 
                     <div className="space-y-4">
-                      <h3 className="text-xl font-bold dark:text-white">Key Facts</h3>
+                      <h3 className="text-xl font-black text-white">Key Medical Facts</h3>
                       <div className="space-y-3">
                         {selectedOrgan.facts.map((fact, idx) => (
-                          <div key={idx} className="flex gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50">
-                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                            <span className="text-sm text-gray-600 dark:text-gray-400">{fact}</span>
+                          <div key={idx} className="flex gap-3 p-3.5 rounded-xl bg-[#080a1c] border border-amber-400/30">
+                            <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                            <span className="text-sm font-medium text-slate-200">{fact}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-primary-500/5 border border-primary-500/10">
-                      <p className="text-sm text-primary-600 dark:text-primary-400 font-medium italic">
-                        "Your decision to pledge a {selectedOrgan.name.toLowerCase()} can be the dawn of a new life for someone in desperate need."
+                    <div className="p-6 rounded-2xl bg-amber-400/10 border-2 border-amber-400/40">
+                      <p className="text-sm text-amber-200 font-bold italic leading-relaxed">
+                        "Your decision to pledge a {selectedOrgan.name.toLowerCase()} establishes an eternal hero legacy for a recipient in desperate need."
                       </p>
                     </div>
                   </div>
@@ -312,16 +316,16 @@ const OrgansPage = () => {
               </div>
 
               {/* Modal Footer */}
-              <div className="p-6 border-t border-gray-100 dark:border-gray-800 flex gap-4 bg-white dark:bg-gray-900 sticky bottom-0">
+              <div className="p-6 border-t-2 border-amber-400/40 flex gap-4 bg-[#0c0f26] sticky bottom-0">
                 <Link
                   to="/register"
-                  className="flex-1 py-4 bg-primary-600 text-white rounded-2xl font-bold text-center hover:bg-primary-700 transition-all shadow-xl shadow-primary-500/20"
+                  className="btn-primary flex-1 text-center text-sm py-4"
                 >
-                  Pledge this Organ
+                  Pledge This Organ
                 </Link>
                 <button
                   onClick={() => setSelectedOrgan(null)}
-                  className="px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                  className="btn-secondary !px-8 text-sm"
                 >
                   Close
                 </button>
@@ -332,47 +336,47 @@ const OrgansPage = () => {
       </AnimatePresence>
 
       {/* Impact Stats */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-100 dark:border-gray-700">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold gradient-text">Incredible Impact</h2>
-          <p className="text-gray-600 dark:text-gray-400">Every donation tells a story of hope and life</p>
+      <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 glass-card border-2 border-amber-400/50 shadow-[8px_8px_0px_0px_#E5C158] rounded-[2.5rem]">
+        <div className="text-center mb-12 space-y-2">
+          <h2 className="text-3xl font-black royal-title">Incredible Royal Impact</h2>
+          <p className="text-slate-300 font-semibold">Every donation tells a story of hope and life</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8 text-center">
-          <div className="space-y-4">
-            <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center mx-auto">
-              <Heart className="w-8 h-8 text-primary-600" />
+          <div className="space-y-4 glass-brutal p-6">
+            <div className="w-16 h-16 bg-amber-400/20 border-2 border-amber-400/60 rounded-2xl flex items-center justify-center mx-auto shadow-[4px_4px_0px_0px_#E5C158]">
+              <Heart className="w-8 h-8 text-amber-300" />
             </div>
-            <h3 className="text-4xl font-bold text-gray-900 dark:text-white">8 Lives</h3>
-            <p className="text-gray-600 dark:text-gray-400">Saved by one single organ donor</p>
+            <h3 className="text-4xl font-black royal-title">8 Lives</h3>
+            <p className="text-slate-300 text-xs font-bold uppercase tracking-wider">Saved by one organ donor</p>
           </div>
-          <div className="space-y-4">
-            <div className="w-16 h-16 bg-pink-100 dark:bg-pink-900/30 rounded-2xl flex items-center justify-center mx-auto">
-              <Users className="w-8 h-8 text-pink-600" />
+          <div className="space-y-4 glass-brutal p-6">
+            <div className="w-16 h-16 bg-rose-500/20 border-2 border-rose-500/60 rounded-2xl flex items-center justify-center mx-auto shadow-[4px_4px_0px_0px_#E63946]">
+              <Users className="w-8 h-8 text-rose-300" />
             </div>
-            <h3 className="text-4xl font-bold text-gray-900 dark:text-white">75+ Lives</h3>
-            <p className="text-gray-600 dark:text-gray-400">Improved through tissue donation</p>
+            <h3 className="text-4xl font-black text-rose-300">75+ Lives</h3>
+            <p className="text-slate-300 text-xs font-bold uppercase tracking-wider">Improved through tissue donation</p>
           </div>
-          <div className="space-y-4">
-            <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mx-auto">
-              <Activity className="w-8 h-8 text-purple-600" />
+          <div className="space-y-4 glass-brutal p-6">
+            <div className="w-16 h-16 bg-emerald-500/20 border-2 border-emerald-500/60 rounded-2xl flex items-center justify-center mx-auto shadow-[4px_4px_0px_0px_#10B981]">
+              <Activity className="w-8 h-8 text-emerald-300" />
             </div>
-            <h3 className="text-4xl font-bold text-gray-900 dark:text-white">100%</h3>
-            <p className="text-gray-600 dark:text-gray-400">Of donation is out of altruism</p>
+            <h3 className="text-4xl font-black text-emerald-300">100%</h3>
+            <p className="text-slate-300 text-xs font-bold uppercase tracking-wider">Altruistic Noble Pledge</p>
           </div>
         </div>
       </section>
 
       {/* CTA */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-20">
-        <div className="glass-card p-12 bg-gradient-to-br from-primary-600 to-pink-600 text-white rounded-3xl relative overflow-hidden">
+        <div className="glass-card p-12 bg-gradient-to-br from-[#121638] via-[#1c0f2f] to-[#121638] border-2 border-amber-400/60 shadow-[8px_8px_0px_0px_#E5C158] rounded-[2.5rem] relative overflow-hidden">
           <div className="relative z-10 space-y-6">
-            <h2 className="text-3xl font-bold">Be a Hero Today</h2>
-            <p className="text-xl opacity-90">Your one decision can change the world for someone.</p>
-            <Link to="/register" className="px-8 py-4 bg-white text-primary-600 font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 inline-block">
-              Register Now as a Donor
+            <h2 className="text-4xl font-black royal-title">Be A Hero Today</h2>
+            <p className="text-lg text-slate-200 font-semibold max-w-xl mx-auto">Your single decision can change the world for someone.</p>
+            <Link to="/register" className="btn-primary text-base px-10 py-5 inline-flex items-center gap-2">
+              <span>Register Now As Hero</span>
             </Link>
           </div>
-          <ShieldCheck className="absolute -bottom-10 -right-10 w-64 h-64 text-white/10" />
+          <ShieldCheck className="absolute -bottom-10 -right-10 w-64 h-64 text-amber-400/10 pointer-events-none" />
         </div>
       </div>
     </div>
