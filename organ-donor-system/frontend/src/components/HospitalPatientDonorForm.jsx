@@ -16,6 +16,7 @@ const ORGANS = [
   'Pancreas',
   'Intestines',
   'Corneas',
+  'Skin',
 ];
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];

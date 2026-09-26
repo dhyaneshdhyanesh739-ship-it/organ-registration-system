@@ -91,7 +91,8 @@ const LoginPage = () => {
     },
     onError: (err) => {
       console.error('Google useGoogleLogin onError:', err);
-      toast.error('Google sign-in failed. Please try again.');
+      const errDetail = err?.error || err?.details || '';
+      toast.error(`Google sign-in failed${errDetail ? `: ${errDetail}` : ''}. Please check popups or Google Client ID.`);
     },
     flow: 'implicit',
   });
@@ -182,37 +183,37 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-950">
-      {/* Background with Ambient Glow */}
+    <div className="min-h-screen flex items-center justify-center p-4 bg-[#080a15] relative overflow-hidden">
+      {/* Background with Ambient Orbs */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-600/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-600/20 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/15 rounded-full blur-[140px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-rose-600/15 rounded-full blur-[140px]" />
       </div>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-5xl bg-[#1a1c2e] rounded-[2rem] overflow-hidden shadow-2xl flex flex-col md:flex-row relative z-10 border border-white/5"
+        className="w-full max-w-5xl glass-card border-2 border-amber-400/40 shadow-royal-glass rounded-[2rem] overflow-hidden flex flex-col md:flex-row relative z-10"
       >
         {/* Left Side: Hero Image */}
-        <div className="md:w-1/2 relative h-64 md:h-auto overflow-hidden">
+        <div className="md:w-1/2 relative h-64 md:h-auto overflow-hidden border-r-2 border-amber-400/20">
           <img 
             src={loginHero} 
             alt="Life-giving Donation Illustration" 
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#080a15]/80 via-transparent to-transparent" />
           
           {/* Subtle Floating Elements Effect */}
           <div className="absolute inset-0 pointer-events-none opacity-40">
             {[...Array(6)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-2 h-2 bg-white rounded-full blur-sm"
+                className="absolute w-2.5 h-2.5 bg-amber-300 rounded-full blur-xs"
                 animate={{
                   y: [-20, 20, -20],
-                  opacity: [0.2, 0.5, 0.2],
+                  opacity: [0.3, 0.8, 0.3],
                   scale: [1, 1.5, 1]
                 }}
                 transition={{
@@ -230,17 +231,17 @@ const LoginPage = () => {
         </div>
 
         {/* Right Side: Login Form */}
-        <div className="md:w-1/2 p-8 md:p-12 lg:p-16 flex flex-col justify-center text-white relative">
-          {/* Close Button Placeholder */}
-          <Link to="/" className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 text-gray-400 hover:text-white transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="md:w-1/2 p-8 md:p-12 lg:p-14 flex flex-col justify-center text-white relative bg-[#0b0e24]/90">
+          {/* Close Button */}
+          <Link to="/" className="absolute top-6 right-6 p-2 rounded-xl hover:bg-amber-400/10 text-amber-300/70 hover:text-amber-300 transition-all border border-amber-400/20">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </Link>
 
-          <div className="mb-10">
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-2 text-white">Organ Donor Registration</h1>
-            <p className="text-gray-400 text-lg font-medium">Give the Gift of Life, Save Lives</p>
+          <div className="mb-8 space-y-2">
+            <h1 className="text-3xl md:text-4xl font-black royal-title">Royal Access</h1>
+            <p className="text-slate-300 text-sm font-medium">Sign in to your LifePulse Organ Registry Account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

@@ -8,7 +8,7 @@ import Button from './ui/Button';
 import { Search, Filter, X } from 'lucide-react';
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-const ORGANS = ['Heart', 'Liver', 'Kidneys', 'Lungs', 'Pancreas', 'Intestines', 'Corneas'];
+const ORGANS = ['Heart', 'Liver', 'Kidneys', 'Lungs', 'Pancreas', 'Intestines', 'Corneas', 'Skin'];
 const URGENCY_LEVELS = ['low', 'medium', 'high', 'critical'];
 const STATUS_OPTIONS = ['pending', 'matched', 'completed', 'cancelled'];
 

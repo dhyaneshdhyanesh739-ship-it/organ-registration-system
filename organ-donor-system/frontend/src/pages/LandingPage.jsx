@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Heart, Users, Building2, Activity, ArrowRight, TrendingUp, Zap } from 'lucide-react';
+import { Heart, Users, Building2, Activity, ArrowRight, TrendingUp, Zap, Sparkles } from 'lucide-react';
 import HeroVisual from '../components/HeroVisual';
 import ActivityFeed from '../components/ActivityFeed';
 import OrganDemandList from '../components/OrganDemandList';
@@ -56,39 +56,44 @@ const LandingPage = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#080a15] text-slate-100 relative selection:bg-amber-400/30 selection:text-amber-200">
       {/* Hero Section */}
-      <section className="relative overflow-hidden min-h-[90vh] flex items-center">
-        {/* Background Image with Overlay */}
-        <div 
-          className="absolute inset-0 z-0 bg-cover bg-bottom bg-no-repeat"
-          style={{ backgroundImage: `url(${homepageBg})` }}
-        />
-        <div className="absolute inset-0 z-0 bg-gradient-to-br from-white/90 via-white/80 to-primary-50/70 dark:from-gray-900/95 dark:via-gray-900/90 dark:to-gray-800/80 backdrop-blur-[2px]" />
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 relative z-10 w-full">
-          <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
+      <section className="relative overflow-hidden min-h-[92vh] flex items-center py-16">
+        {/* Ambient Mesh Background Orbs */}
+        <div className="absolute top-10 left-1/4 w-96 h-96 bg-amber-500/15 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
+        <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-rose-600/15 rounded-full blur-[140px] pointer-events-none animate-pulse-slow"></div>
+        <div className="absolute top-1/2 left-10 w-80 h-80 bg-purple-800/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10 w-full">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               className="space-y-8"
             >
-              <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                <span className="gradient-text">Save Lives</span>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/15 border-2 border-amber-400/50 text-amber-300 text-xs font-black uppercase tracking-widest shadow-[0_0_20px_rgba(229,193,88,0.25)]">
+                <Sparkles className="w-4 h-4 text-amber-300 animate-spin" />
+                <span>The Royal Organ Registry of Life</span>
+              </div>
+              
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-black leading-none tracking-tight">
+                <span className="royal-title">Save Lives</span>
                 <br />
-                Through Organ Donation
+                <span className="text-white drop-shadow-md">With Royal Legacy.</span>
               </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300">
-                Join thousands of heroes who have pledged to give the gift of life. Register as an organ donor today and make a lasting impact.
+
+              <p className="text-lg md:text-xl text-slate-300/90 font-medium leading-relaxed max-w-xl">
+                Join thousands of noble pledge heroes giving the sacred gift of life. Experience our royal-grade, automated organ matching system.
               </p>
-              <div className="flex flex-wrap gap-4">
-                <Link to="/register" className="btn-primary flex items-center gap-2 shadow-xl shadow-primary-500/20">
-                  Register Now
-                  <ArrowRight className="w-5 h-5" />
+
+              <div className="flex flex-wrap gap-5 pt-2">
+                <Link to="/register" className="btn-primary text-base px-8 py-4">
+                  <span>Register As Hero</span>
+                  <ArrowRight className="w-5 h-5 text-slate-950" />
                 </Link>
-                <Link to="/login" className="btn-secondary">
-                  Sign In
+                <Link to="/login" className="btn-secondary text-base px-8 py-4">
+                  <span>Sign In</span>
                 </Link>
               </div>
             </motion.div>
@@ -99,23 +104,21 @@ const LandingPage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative flex justify-center items-center"
             >
-              <HeroVisual />
+              <div className="glass-card p-4 border-2 border-amber-400/40 shadow-royal-glass rounded-3xl relative">
+                <HeroVisual />
+              </div>
             </motion.div>
           </div>
         </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute top-20 right-10 w-72 h-72 bg-primary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow pointer-events-none"></div>
-        <div className="absolute bottom-20 left-10 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow animation-delay-400 pointer-events-none"></div>
       </section>
 
       {/* Stats Section */}
       <section 
-        className="py-16 bg-white dark:bg-gray-800 border-y border-gray-100 dark:border-gray-700"
+        className="py-16 bg-[#0c0f24]/90 backdrop-blur-2xl border-y-2 border-amber-400/30 relative z-20"
         aria-label="Impact Statistics"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8" aria-live="polite">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {statItems.map((stat, index) => (
               <motion.div
                 key={index}
@@ -123,16 +126,16 @@ const LandingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="text-center space-y-2 group"
+                className="glass-brutal p-6 text-center space-y-3 group hover:border-amber-300 hover:shadow-[7px_7px_0px_0px_#E5C158] transition-all"
               >
                 <div 
-                  className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary-500 to-pink-500 rounded-2xl mb-4 group-hover:rotate-6 transition-transform shadow-lg shadow-primary-500/20"
+                  className="inline-flex items-center justify-center w-14 h-14 bg-amber-400/15 border-2 border-amber-400/50 rounded-xl mb-1 group-hover:rotate-6 transition-transform shadow-[0_0_15px_rgba(229,193,88,0.2)]"
                   aria-hidden="true"
                 >
-                  <stat.icon className="w-8 h-8 text-white" />
+                  <stat.icon className="w-7 h-7 text-amber-300" />
                 </div>
-                <h3 className="text-3xl font-black gradient-text">{stat.value}</h3>
-                <p className="text-gray-600 dark:text-gray-400 font-medium tracking-tight">{stat.label}</p>
+                <h3 className="text-3xl font-black royal-title">{stat.value}</h3>
+                <p className="text-slate-400 font-bold text-xs uppercase tracking-wider">{stat.label}</p>
               </motion.div>
             ))}
           </div>
@@ -140,61 +143,58 @@ const LandingPage = () => {
       </section>
 
       {/* Live Activity & Organ Demand Section */}
-      <section className="py-24 bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
+      <section className="py-24 relative overflow-hidden bg-[#080a15]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-12 gap-16">
+          <div className="grid lg:grid-cols-12 gap-12">
             {/* Left Col: Live Activity */}
-            <div className="lg:col-span-5">
-              <div className="mb-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 text-primary-500 text-xs font-bold uppercase tracking-wider mb-4">
-                  <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
+            <div className="lg:col-span-5 space-y-6">
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-400/15 border border-emerald-400/50 text-emerald-300 text-xs font-black uppercase tracking-wider">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10B981]" />
                   Live Network Impact
                 </div>
-                <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                  Community <span className="text-primary-500">Milestones</span>
+                <h2 className="text-4xl font-black text-white leading-tight">
+                  Royal Community <span className="royal-title">Milestones</span>
                 </h2>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Every action on our platform brings us closer to a world where no one dies waiting for an organ. Refresh to see the latest updates.
+                <p className="text-slate-300/80 font-medium">
+                  Real-time organ registration milestones and successful live hospital matching operations.
                 </p>
               </div>
 
-              <ActivityFeed activities={activities} loading={loading} />
+              <div className="glass-card p-6 border-2 border-amber-400/30">
+                <ActivityFeed activities={activities} loading={loading} />
+              </div>
             </div>
 
             {/* Right Col: Organ Demand */}
             <div className="lg:col-span-7">
-              <div className="p-8 md:p-12 rounded-[2.5rem] bg-gray-900 border border-white/5 shadow-2xl relative overflow-hidden">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-                     style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
-                
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-8">
+              <div className="glass-card p-8 md:p-10 border-2 border-amber-400/40 shadow-royal-glass relative overflow-hidden">
+                <div className="relative z-10 space-y-6">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-3xl font-bold text-white flex items-center gap-3">
-                        Real-time Demand
-                        <Zap className="w-6 h-6 text-yellow-400 fill-yellow-400" />
+                      <h3 className="text-3xl font-black text-white flex items-center gap-3">
+                        <span>Real-time Organ Demand</span>
+                        <Zap className="w-6 h-6 text-amber-400 fill-amber-400 animate-pulse" />
                       </h3>
-                      <p className="text-gray-400 mt-2">Current priority waitlist across all partner hospitals</p>
+                      <p className="text-slate-400 text-sm font-medium mt-1">Priority waitlists active across accredited medical centers</p>
                     </div>
                     <div className="hidden sm:block text-right">
-                      <div className="text-2xl font-black text-white">Active</div>
-                      <div className="text-xs text-primary-400 font-bold uppercase tracking-widest">Network Status</div>
+                      <div className="royal-badge">ACTIVE ROYAL NETWORK</div>
                     </div>
                   </div>
 
                   <OrganDemandList demand={demand} loading={loading} />
 
-                  <div className="mt-10 p-6 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                  <div className="p-5 rounded-xl bg-amber-400/10 border-2 border-amber-400/30 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
                       <TrendingUp className="w-6 h-6" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-white text-sm">Growing Network</h4>
-                      <p className="text-xs text-gray-500">Matching efficiency increased by 12% this month.</p>
+                      <h4 className="font-extrabold text-amber-200 text-sm uppercase tracking-wide">Optimized Matching Engine</h4>
+                      <p className="text-xs text-slate-300/80 font-medium">Recipient matching accuracy elevated with multi-variable algorithms.</p>
                     </div>
-                    <Link to="/organs" className="ml-auto text-primary-400 text-xs font-bold hover:underline">
-                      View Insights
+                    <Link to="/organs" className="ml-auto text-amber-300 text-xs font-black uppercase tracking-wider hover:underline shrink-0">
+                      Registry Insights →
                     </Link>
                   </div>
                 </div>
@@ -206,7 +206,7 @@ const LandingPage = () => {
 
       {/* How It Works */}
       <section 
-        className="py-24 bg-white dark:bg-gray-800"
+        className="py-24 bg-[#0c0f24]/90 backdrop-blur-2xl border-t-2 border-amber-400/30"
         aria-label="Onboarding Steps"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -214,17 +214,17 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-16 space-y-3"
           >
-            <h2 className="text-4xl font-bold mb-4">The Hero's Journey</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">Simple steps to make an eternal impact</p>
+            <h2 className="text-4xl md:text-5xl font-black royal-title">The Noble Hero's Journey</h2>
+            <p className="text-slate-300 text-lg font-medium">Three seamless steps to seal an eternal gift</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: '01', title: 'Pledge & Register', desc: 'Securely create your hero profile and express your donation preferences.' },
-              { step: '02', title: 'Identity Verification', desc: 'We verify your identification to maintain the highest standards of trust.' },
-              { step: '03', title: 'Legacy of Life', desc: 'Get matched with those in need and give the ultimate gift of a second chance.' },
+              { step: '01', title: 'Pledge & Register', desc: 'Create your royal donor profile and select organ donation preferences.' },
+              { step: '02', title: 'Identity & Medical Check', desc: 'Authenticated medical encryption verifies donor records securely.' },
+              { step: '03', title: 'Gift of Eternal Life', desc: 'Automatic matching notifies verified hospital surgical teams in emergency priority.' },
             ].map((item, index) => (
               <motion.div
                 key={index}
@@ -232,13 +232,13 @@ const LandingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.2 }}
-                className="relative p-8 rounded-3xl bg-gray-50 dark:bg-gray-900 border border-transparent hover:border-primary-500/20 transition-all group"
+                className="glass-brutal p-8 relative overflow-hidden group hover:border-amber-300 hover:shadow-[7px_7px_0px_0px_#E5C158] transition-all"
               >
-                <div className="text-6xl font-black text-primary-500/10 absolute -top-4 -left-2 group-hover:text-primary-500/20 transition-colors">
+                <div className="text-7xl font-black royal-title opacity-20 absolute -top-4 -left-2 group-hover:opacity-40 transition-opacity">
                   {item.step}
                 </div>
-                <h3 className="text-2xl font-bold mb-3 relative z-10">{item.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 relative z-10 leading-relaxed font-medium">{item.desc}</p>
+                <h3 className="text-2xl font-black text-amber-200 mb-3 relative z-10 font-sans tracking-tight">{item.title}</h3>
+                <p className="text-slate-300 relative z-10 leading-relaxed font-medium text-sm">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -246,8 +246,7 @@ const LandingPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-primary-600 to-pink-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
+      <section className="py-24 bg-gradient-to-r from-[#170e30] via-[#24133b] to-[#121633] text-white relative overflow-hidden border-t-2 border-amber-400/40">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -255,22 +254,22 @@ const LandingPage = () => {
             viewport={{ once: true }}
             className="space-y-8"
           >
-            <h2 className="text-5xl font-black">Be the Light in Someone's Darkest Hour</h2>
-            <p className="text-xl opacity-90 max-w-2xl mx-auto">
-              A single donor can save up to 8 lives and improve up to 75 more. Your legacy starts here.
+            <h2 className="text-4xl md:text-5xl font-black royal-title">Be The Light In Someone's Darkest Hour</h2>
+            <p className="text-slate-200 text-lg max-w-2xl mx-auto font-medium">
+              A single donor can save up to 8 lives and improve 75 more. Establish your legacy today.
             </p>
             <div className="flex flex-wrap justify-center gap-6 pt-4">
               <Link
                 to="/register"
-                className="px-10 py-5 bg-white text-primary-600 font-black rounded-2xl shadow-2xl hover:bg-gray-50 transform hover:-translate-y-1 transition-all duration-200 text-lg"
+                className="btn-primary text-base px-10 py-5"
               >
-                Sign the Pledge
+                <span>Sign The Royal Pledge</span>
               </Link>
               <Link
                 to="/organs"
-                className="px-10 py-5 bg-primary-700/30 text-white border border-white/20 font-black rounded-2xl backdrop-blur-md hover:bg-primary-700/50 transition-all text-lg"
+                className="btn-secondary text-base px-10 py-5"
               >
-                Learn More
+                <span>Explore Organs</span>
               </Link>
             </div>
           </motion.div>

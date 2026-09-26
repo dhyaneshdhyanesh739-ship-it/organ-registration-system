@@ -54,9 +54,6 @@ const donorSchema = new mongoose.Schema(
                 'Intestines',
                 'Corneas',
                 'Skin',
-                'Bone',
-                'Heart Valves',
-                'Blood Vessels',
             ],
             required: [true, 'Please select at least one organ'],
             validate: {

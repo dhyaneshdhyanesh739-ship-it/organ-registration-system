@@ -96,60 +96,71 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-40 glass-card border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-md">
+    <nav className="sticky top-0 z-40 bg-[#0c0f24]/90 backdrop-blur-2xl border-b-2 border-amber-400/30 shadow-royal-glass">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <img 
-              src="/logo.jpg" 
-              alt="OrganDonor Logo" 
-              className="w-12 h-12 object-cover border-2 border-primary-500 group-hover:scale-110 transition-transform rounded-full cursor-zoom-in bg-white shadow-sm" 
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setIsLogoModalOpen(true);
-              }}
-            />
-            <span className="text-xl font-bold gradient-text">OrganDonor</span>
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="relative">
+              <img 
+                src="/logo.jpg" 
+                alt="KIDDO Organ System Logo" 
+                className="w-12 h-12 object-contain border-2 border-emerald-400/60 group-hover:scale-110 group-hover:border-emerald-300 transition-all rounded-xl cursor-zoom-in bg-white p-0.5 shadow-[0_0_20px_rgba(16,185,129,0.3)] shrink-0" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsLogoModalOpen(true);
+                }}
+              />
+              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-2xl font-black royal-title tracking-wider">LifePulse</span>
+              <span className="text-[10px] font-bold text-amber-300/80 uppercase tracking-widest -mt-1 font-mono">Royal Organ Network</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link to="/organs" className="btn-ghost">
-              Organs Info
+          <div className="hidden md:flex items-center gap-5">
+            <Link to="/organs" className="btn-ghost flex items-center gap-2">
+              <Activity className="w-4 h-4 text-amber-400" />
+              <span>Organs Registry</span>
             </Link>
             {!isAuthenticated ? (
               <>
                 <Link to="/register" className="btn-primary">
-                  Register Now
+                  <span>Register Now</span>
                 </Link>
-                <Link to="/login" className="btn-ghost">
-                  Login
+                <Link to="/login" className="btn-secondary">
+                  <span>Login</span>
                 </Link>
               </>
             ) : (
               <>
                 <button
                   onClick={() => setIsAIScannerOpen(true)}
-                  className="px-3.5 py-1.5 rounded-full font-extrabold text-xs bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500 text-white shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center gap-1.5 border border-rose-300 dark:border-rose-700 cursor-pointer"
+                  className="px-4 py-2 rounded-xl font-extrabold text-xs bg-gradient-to-r from-amber-500 via-rose-500 to-amber-400 text-slate-950 shadow-brutal-dark hover:shadow-royal-glow hover:scale-105 active:translate-x-1 active:translate-y-1 transition-all flex items-center gap-2 border-2 border-amber-200 cursor-pointer uppercase tracking-wider"
                   title="AI Multimodal OCR & Donor History Calculator"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                  <span>AI OCR Model</span>
+                  <Sparkles className="w-4 h-4 text-slate-950 animate-spin" />
+                  <span>AI OCR Scanner</span>
                 </button>
 
-                <Link to={getDashboardLink()} className="btn-ghost flex items-center gap-2">
-                  <Layout className="w-4 h-4" />
-                  Dashboard
+                <Link to={getDashboardLink()} className="btn-secondary flex items-center gap-2">
+                  <Layout className="w-4 h-4 text-amber-400" />
+                  <span>Dashboard</span>
                 </Link>
-                <button onClick={handleLogout} className="btn-ghost flex items-center gap-2">
+                <button onClick={handleLogout} className="btn-ghost flex items-center gap-2 text-rose-400 hover:text-rose-300">
                   <LogOut className="w-4 h-4" />
-                  Logout
+                  <span>Logout</span>
                 </button>
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-100 dark:bg-primary-900/30 rounded-full">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium">{user?.firstName || 'User'}</span>
+                <div className="flex items-center gap-2 px-3.5 py-1.5 bg-amber-400/15 border border-amber-400/40 rounded-full shadow-[0_0_15px_rgba(229,193,88,0.2)]">
+                  <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#10B981]"></div>
+                  <span className="text-xs font-extrabold text-amber-300 uppercase tracking-wide">{user?.firstName || 'User'}</span>
+                  <span className="text-[10px] px-1.5 py-0.5 bg-amber-400 text-slate-950 font-black rounded-md">{user?.role?.toUpperCase()}</span>
                 </div>
                 
                 {/* Notification Center */}
@@ -221,13 +232,6 @@ const Navbar = () => {
                 <ReceiverHistoryCart />
               )}
 
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                aria-label="Toggle theme"
-              >
-                {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
             </div>
           </div>
 
@@ -237,18 +241,12 @@ const Navbar = () => {
               <a
                 href="/hospital-registration-form.png"
                 download="hospital-registration-form.png"
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="p-2 rounded-xl border border-amber-400/30 bg-amber-400/10 text-amber-300"
                 title="Download Registration Form"
               >
                 <FileText className="w-5 h-5" />
               </a>
             )}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
-              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"

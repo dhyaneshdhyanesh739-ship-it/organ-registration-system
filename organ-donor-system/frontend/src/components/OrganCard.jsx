@@ -10,9 +10,6 @@ const organIcons = {
   Intestines: '🌀',
   Corneas: '👁️',
   Skin: '🤚',
-  Bone: '🦴',
-  'Heart Valves': '💝',
-  'Blood Vessels': '🩸',
 };
 
 const OrganCard = ({ organ, isSelected, onClick, disabled = false }) => {

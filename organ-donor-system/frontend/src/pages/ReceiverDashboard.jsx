@@ -7,7 +7,7 @@ import { Heart, Search, Activity, Loader, Send, Filter, ChevronDown, CheckCircle
 import Certificate from '../components/Certificate';
 import AIDonorHistoryModal from '../components/AIDonorHistoryModal';
 
-const ORGANS = ['Heart', 'Liver', 'Kidneys', 'Lungs', 'Pancreas', 'Intestines', 'Corneas', 'Skin', 'Bone', 'Heart Valves', 'Blood Vessels'];
+const ORGANS = ['Heart', 'Liver', 'Kidneys', 'Lungs', 'Pancreas', 'Intestines', 'Corneas', 'Skin'];
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const URGENCY_LEVELS = ['critical', 'high', 'medium', 'low'];
 
@@ -21,7 +21,6 @@ const URGENCY_COLORS = {
 const ORGAN_ICONS = {
   Heart: '❤️', Liver: '🫀', Kidneys: '🫘', Lungs: '🫁',
   Pancreas: '🟤', Intestines: '🔵', Corneas: '👁️', Skin: '🧬',
-  Bone: '🦴', 'Heart Valves': '💗', 'Blood Vessels': '🩸',
 };
 
 const ReceiverDashboard = () => {

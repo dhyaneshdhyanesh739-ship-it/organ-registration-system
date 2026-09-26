@@ -190,7 +190,11 @@ const RegisterPage = () => {
         setLoading(false);
       }
     },
-    onError: () => toast.error('Google Registration Failed'),
+    onError: (err) => {
+      console.error('Google registration useGoogleLogin onError:', err);
+      const errDetail = err?.error || err?.details || '';
+      toast.error(`Google Registration Failed${errDetail ? `: ${errDetail}` : ''}`);
+    },
     flow: 'implicit'
   });
 

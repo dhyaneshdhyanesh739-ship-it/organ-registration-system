@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <GoogleOAuthProvider clientId="1035790321219-5h58k71ovo41c98an7lmanmq1lhcrhoh.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || "1035790321219-5h58k71ovo41c98an7lmanmq1lhcrhoh.apps.googleusercontent.com"}>
         <ThemeProvider>
           <ToastProvider>
             <AuthProvider>
